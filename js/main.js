@@ -3,6 +3,10 @@
 
   var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Sobe este número sempre que uma imagem em assets/ for substituída mantendo o mesmo
+  // nome de arquivo, para forçar o navegador/CDN a buscar a versão nova (cache-busting).
+  var ASSET_VERSION = '4';
+
   // ---------- helpers ----------
   function escapeHtml(str) {
     return String(str == null ? '' : str).replace(/[&<>"']/g, function (c) {
@@ -12,8 +16,8 @@
   function picture(basePath, alt, cls, extraAttrs) {
     extraAttrs = extraAttrs || '';
     return '<picture>' +
-      '<source srcset="' + basePath + '.webp" type="image/webp">' +
-      '<img src="' + basePath + '.png" alt="' + escapeHtml(alt) + '"' + (cls ? ' class="' + cls + '"' : '') + ' ' + extraAttrs + '>' +
+      '<source srcset="' + basePath + '.webp?v=' + ASSET_VERSION + '" type="image/webp">' +
+      '<img src="' + basePath + '.png?v=' + ASSET_VERSION + '" alt="' + escapeHtml(alt) + '"' + (cls ? ' class="' + cls + '"' : '') + ' ' + extraAttrs + '>' +
       '</picture>';
   }
   function fetchJSON(path) {
