@@ -41,9 +41,11 @@ assets/                    imagens (.webp otimizado + .png de fallback) e favico
   redimensionadas para o tamanho real de exibição. Redução de **~23MB para ~1MB** de
   peso transferido em navegadores modernos.
 - `loading="lazy"` em todas as imagens fora da dobra inicial.
-- Vídeo do herói: continua exigindo o arquivo `hero.mp4` (não incluído no zip enviado —
-  ver pendência abaixo). `poster` de fallback em WebP já está pronto. Vídeo é pausado
-  automaticamente em mobile e quando o usuário pede "reduzir movimento".
+- **Vídeo do herói recebido e integrado**: `assets/hero.mp4` + `assets/hero.webm`
+  (o navegador escolhe o WebM quando suporta, menor). Comprimido de **45MB para ~11MB/10MB**
+  sem perda perceptível (áudio removido — o vídeo é mudo no site de qualquer forma).
+  Em mobile e com "reduzir movimento" o vídeo não autoplay (sem o atributo `autoplay` no
+  HTML, só `preload="metadata"`), então o arquivo inteiro não é baixado à toa nesses casos.
 
 ### Formulários
 - Formulário de orçamento tem envio real via `fetch`, roteamento por setor (campo oculto
@@ -96,22 +98,21 @@ briefing) — o site já está preparado para recebê-las assim que chegarem, ba
    (Decap CMS) pode ser ativado como está, ou se precisamos de uma alternativa de painel
    próprio para JSON (cenário cPanel).
 2. **Domínio e HTTPS** — para atualizar `canonical`, Open Graph, `sitemap.xml`, `robots.txt`.
-3. **Vídeo do herói** — arquivo `hero.mp4` (não veio no zip) + idealmente uma versão `.webm`.
-4. **E-mails por setor** (Águas/Alimentos/Controle/Comercial) e **endpoint de formulário**
+3. **E-mails por setor** (Águas/Alimentos/Controle/Comercial) e **endpoint de formulário**
    (Formspree/Web3Forms ou SMTP) — `content/site.json` → `sectorEmails` / `formEndpoint`.
-5. **URL do portal de resultados (LIMS)** e como funciona "esqueci a senha" —
+4. **URL do portal de resultados (LIMS)** e como funciona "esqueci a senha" —
    `content/site.json` → `portalResultadosUrl`.
-6. **Destino de "Atualizar cadastro"** — `content/site.json` → `cadastroUrl`.
-7. **PDFs**: certificado ISO/IEC 17025 (escopo), alvarás, responsável técnica, kit de
+5. **Destino de "Atualizar cadastro"** — `content/site.json` → `cadastroUrl`.
+6. **PDFs**: certificado ISO/IEC 17025 (escopo), alvarás, responsável técnica, kit de
    coleta — subir em `assets/docs/` e preencher `content/documents.json` → `file`.
-8. **Depoimentos reais** (texto + nome + empresa autorizados) — `content/testimonials.json`.
-9. **Números reais** (parâmetros no escopo) — `content/site.json` → `stats`.
-10. **GA4** (Measurement ID) e eventual pixel de campanha — `content/site.json` → `ga4Id`.
-11. **WhatsApp oficial** — `content/site.json` → `whatsappNumber`.
-12. **Redes sociais** (Instagram/Facebook) — `content/site.json` → `socials`.
-13. **Revisão jurídica** de `privacidade.html` e `termos.html` (conteúdo modelo).
-14. **Cargos da equipe** — `content/team.json` → `role` (nomes já confirmados no material
-    enviado).
+7. **Depoimentos reais** (texto + nome + empresa autorizados) — `content/testimonials.json`.
+8. **Números reais** (parâmetros no escopo) — `content/site.json` → `stats`.
+9. **GA4** (Measurement ID) e eventual pixel de campanha — `content/site.json` → `ga4Id`.
+10. **WhatsApp oficial** — `content/site.json` → `whatsappNumber`.
+11. **Redes sociais** (Instagram/Facebook) — `content/site.json` → `socials`.
+12. **Revisão jurídica** de `privacidade.html` e `termos.html` (conteúdo modelo).
+13. **Cargos da equipe** — `content/team.json` → `role` já preenchido com o texto que estava
+    no protótipo; só falta o cliente confirmar se está correto e atualizado.
 
 Nenhuma dessas pendências quebra o site: todos os pontos aparecem com um aviso claro para
 o visitante (ex.: "aguardando configuração") em vez de fingir uma ação que não acontece.
@@ -134,9 +135,23 @@ próprio cliente.
   envio do formulário (com aviso correto enquanto não há endpoint) testados
   interativamente em desktop (1440px) e mobile (390px).
 - Nenhum erro de console/JS encontrado (os únicos erros de rede observados no ambiente de
-  teste são esperados: `hero.mp4` ausente, e bloqueios de rede do próprio sandbox de
-  desenvolvimento para fontes do Google e Netlify Identity — **não ocorrem em produção**
-  com acesso normal à internet).
+  teste são bloqueios de rede do próprio sandbox de desenvolvimento para fontes do Google e
+  Netlify Identity — **não ocorrem em produção** com acesso normal à internet).
+- Vídeo do herói testado depois de integrado: toca automaticamente em desktop (WebM
+  escolhido pelo navegador), fica pausado em mobile/reduced-motion sem baixar o arquivo
+  todo à toa.
+
+## Rodada 2 de correções (a partir do teste no domínio de teste)
+
+- Fotos da equipe e do escritório vinham do protótipo com texto (nome/cargo/endereço) já
+  "queimado" nos pixels, duplicando o texto real renderizado por HTML — corrigido
+  recortando a faixa de legenda das imagens.
+- Bug de CSS que cortava as fotos de Água/Alimentos/Controle mais do que deveria
+  (`height:100%` sem altura de referência) — corrigido com `aspect-ratio`.
+- Sliders de Equipe e Depoimentos não respondiam ao clique (IDs desatualizados do
+  protótipo) — corrigido; agora também escondem as setas quando não há o que rolar.
+- Logo do cabeçalho/rodapé substituído pela marca nova enviada pelo cliente.
+- Vídeo do herói (`hero.mp4`/`hero.webm`) integrado e comprimido (45MB → ~10-11MB).
 
 ## Ainda no checklist do briefing (próximos passos, após as pendências acima)
 

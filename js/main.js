@@ -237,11 +237,11 @@
     hv.addEventListener('loadedmetadata', setV);
     hv.addEventListener('play', setV);
     hv.addEventListener('canplay', setV);
-    if (reduceMotion || matchMedia('(max-width:640px)').matches) {
-      hv.removeAttribute('autoplay');
-      hv.pause();
-    } else {
+    // sem o atributo autoplay no HTML: em mobile/reduced-motion o vídeo nunca
+    // chega a baixar o arquivo inteiro (preload="metadata" só pega os metadados)
+    if (!reduceMotion && !matchMedia('(max-width:640px)').matches) {
       setV();
+      hv.play().catch(function () {});
     }
   }
 
