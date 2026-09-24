@@ -1,0 +1,51 @@
+{
+  "items": [
+    {
+      "id": "agua",
+      "title": "Água",
+      "intro": "Análises físico-químicas e microbiológicas para cada tipo de água — sempre pela norma que a legislação exige.",
+      "items": [
+        { "label": "Água potável", "norm": "Portaria GM/MS 888/2021" },
+        { "label": "Balneabilidade", "norm": "CONAMA 274" },
+        { "label": "Água de piscina", "norm": "NBR 10818" },
+        { "label": "Águas purificadas", "norm": "RDC 302" },
+        { "label": "Água de hemodiálise", "norm": "RDC 154" },
+        { "label": "Água de farmácia de manipulação", "norm": "RDC 67" },
+        { "label": "Água mineral", "norm": "RDC 274/275" }
+      ],
+      "chips": ["Indústria", "Food service", "Condomínios", "Farmácias", "Hemodiálise", "Piscinas", "Água mineral", "Poços"],
+      "image": "assets/serv_agua",
+      "imageAlt": "Análise de água"
+    },
+    {
+      "id": "alimentos",
+      "title": "Alimentos",
+      "intro": "Pesquisa de patógenos e indicadores que atestam a segurança do seu produto, do ingrediente ao prato pronto.",
+      "items": [
+        { "label": "Salmonella sp.", "norm": "RDC 331/2019" },
+        { "label": "Listeria monocytogenes", "norm": "RDC 331/2019" },
+        { "label": "Coliformes totais e termotolerantes", "norm": "IN 60/2019" },
+        { "label": "Staphylococcus coagulase positiva", "norm": "IN 60/2019" },
+        { "label": "Bacillus cereus · Clostridium", "norm": "IN 60/2019" },
+        { "label": "Bolores e leveduras · mesófilos", "norm": "Boas práticas" }
+      ],
+      "chips": [],
+      "image": "assets/serv_alimentos",
+      "imageAlt": "Análise de alimentos"
+    },
+    {
+      "id": "controle",
+      "title": "Controle de qualidade",
+      "intro": "O controle que garante que o seu processo está sob domínio — do equipamento ao ambiente.",
+      "items": [
+        { "label": "Eficiência de esterilização em autoclave", "norm": "Indicadores biológicos" },
+        { "label": "Swabs de superfícies e utensílios", "norm": "Higienização" },
+        { "label": "Swabs de manipuladores", "norm": "Boas práticas" },
+        { "label": "Qualidade do ar em ambientes", "norm": "Monitoramento" }
+      ],
+      "chips": [],
+      "image": "assets/serv_controle",
+      "imageAlt": "Controle de qualidade"
+    }
+  ]
+}

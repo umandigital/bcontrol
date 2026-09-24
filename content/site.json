@@ -1,0 +1,26 @@
+{
+  "whatsappNumber": "TODO-5551999999999",
+  "whatsappMessage": "Olá! Vim pelo site da bcontrol e gostaria de solicitar um orçamento.",
+  "phoneDisplay": "(51) 3434-2401",
+  "address": "Rodovia Tapir Rocha, 7000 — Sala 170/174, Viamão/RS · TECNOPUC",
+  "portalResultadosUrl": "TODO-URL-DO-PORTAL-LIMS",
+  "cadastroUrl": "TODO-URL-ATUALIZAR-CADASTRO",
+  "ga4Id": "",
+  "formEndpoint": "TODO-ENDPOINT-FORMSPREE-OU-WEB3FORMS",
+  "sectorEmails": {
+    "Águas": "TODO-agua@bcontrol.com.br",
+    "Alimentos": "TODO-alimentos@bcontrol.com.br",
+    "Controle de qualidade": "TODO-controle@bcontrol.com.br",
+    "Comercial": "TODO-comercial@bcontrol.com.br"
+  },
+  "socials": {
+    "instagram": "TODO-URL-INSTAGRAM",
+    "facebook": "TODO-URL-FACEBOOK"
+  },
+  "stats": [
+    { "value": 14, "suffix": "", "prefix": "", "label": "anos de atuação" },
+    { "value": 1500, "suffix": "", "prefix": "+", "label": "clientes ativos" },
+    { "value": 25, "suffix": "%", "prefix": "", "label": "crescimento médio ao ano" },
+    { "text": "+[a conf.]", "label": "parâmetros no escopo" }
+  ]
+}

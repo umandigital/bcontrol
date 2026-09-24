@@ -1,0 +1,10 @@
+{
+  "items": [
+    { "q": "Como funciona? (do pedido ao laudo)", "a": "1) Orçamento — resposta no mesmo dia · 2) Coleta — kit PDF ou formulário online · 3) Análise — método acreditado · 4) Laudo no portal — com parecer técnico." },
+    { "q": "Como devo coletar e enviar a amostra?", "a": "Baixe o kit de coleta (PDF editável) ou use o formulário online, siga as orientações de recipiente, volume e transporte e envie junto com a amostra. Na dúvida, fale com a nossa equipe técnica." },
+    { "q": "Qual é o prazo do laudo?", "a": "Depende do tipo de ensaio e é informado no orçamento. Você acompanha e baixa o resultado pelo portal." },
+    { "q": "Os laudos são aceitos pela fiscalização?", "a": "Sim. Somos acreditados ISO/IEC 17025 e os laudos atendem às exigências de ANVISA, CONAMA e Ministério da Saúde." },
+    { "q": "Como acesso meus resultados?", "a": "Pelo portal “Resultados online”, no topo do site, com a sua chave e senha." },
+    { "q": "Atendem fora de Viamão/POA?", "a": "Sim, atendemos todo o Rio Grande do Sul, com logística de coleta e recebimento." }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "items": [
+    { "name": "Marquespan", "logo": "assets/logo_marquespan" },
+    { "name": "Zaffari", "logo": "assets/logo_zaffari" },
+    { "name": "Rissul", "logo": "assets/logo_rissul" },
+    { "name": "Jimo", "logo": "assets/logo_jimo" },
+    { "name": "Nicolini", "logo": "assets/logo_nicolini" }
+  ]
+}

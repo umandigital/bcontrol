@@ -1,0 +1,173 @@
+# Painel de edição de conteúdo (Decap CMS) — bcontrol
+#
+# STATUS: o tipo de hospedagem final (Netlify/Cloudflare Pages x cPanel/FTP)
+# ainda não foi confirmado com o cliente. Este arquivo já deixa o CMS git-based
+# pronto para o cenário recomendado (Netlify/Cloudflare Pages).
+#
+# Para ativar em produção na Netlify:
+#   1) Publicar o site na Netlify a partir deste repositório/branch.
+#   2) Ativar "Identity" + "Git Gateway" nas configurações do site na Netlify.
+#   3) Convidar o(s) usuário(s) do cliente pelo painel de Identity.
+#   4) Acessar https://SEUDOMINIO/admin e fazer login.
+#
+# Se a hospedagem final for cPanel/FTP tradicional (sem build/git), este painel
+# não funciona nesse formato — nesse cenário, a alternativa é uma página de
+# admin simples e protegida que edita os mesmos arquivos content/*.json
+# (ver RELATORIO.md, seção "CMS / edição de conteúdo").
+
+backend:
+  name: git-gateway
+  branch: claude/gallant-clarke-gycpuc # TODO: trocar para a branch de produção final (ex.: main)
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+locale: "pt"
+
+collections:
+  - name: "config"
+    label: "Configurações do site"
+    files:
+      - name: "site"
+        label: "Configurações gerais"
+        file: "content/site.json"
+        fields:
+          - { label: "WhatsApp (DDI+DDD+número, só dígitos, ex. 5551999999999)", name: "whatsappNumber", widget: "string" }
+          - { label: "Mensagem padrão do WhatsApp", name: "whatsappMessage", widget: "string" }
+          - { label: "Telefone (exibição)", name: "phoneDisplay", widget: "string" }
+          - { label: "Endereço", name: "address", widget: "string" }
+          - { label: "URL do portal de resultados (LIMS)", name: "portalResultadosUrl", widget: "string" }
+          - { label: "URL de atualização de cadastro", name: "cadastroUrl", widget: "string" }
+          - { label: "Google Analytics 4 (Measurement ID, ex. G-XXXXXXX)", name: "ga4Id", widget: "string", required: false }
+          - { label: "Endpoint do formulário (Formspree/Web3Forms)", name: "formEndpoint", widget: "string" }
+          - label: "E-mails por setor"
+            name: "sectorEmails"
+            widget: "object"
+            fields:
+              - { label: "Águas", name: "Águas", widget: "string" }
+              - { label: "Alimentos", name: "Alimentos", widget: "string" }
+              - { label: "Controle de qualidade", name: "Controle de qualidade", widget: "string" }
+              - { label: "Comercial", name: "Comercial", widget: "string" }
+          - label: "Redes sociais"
+            name: "socials"
+            widget: "object"
+            fields:
+              - { label: "Instagram (URL)", name: "instagram", widget: "string" }
+              - { label: "Facebook (URL)", name: "facebook", widget: "string" }
+          - label: "Números / estatísticas (faixa abaixo do vídeo)"
+            name: "stats"
+            widget: "list"
+            fields:
+              - { label: "Valor numérico (contador animado)", name: "value", widget: "number", required: false }
+              - { label: "Texto alternativo (ex: +[a conf.]) — use no lugar de um número", name: "text", widget: "string", required: false }
+              - { label: "Prefixo (ex: +)", name: "prefix", widget: "string", required: false }
+              - { label: "Sufixo (ex: %)", name: "suffix", widget: "string", required: false }
+              - { label: "Legenda", name: "label", widget: "string" }
+
+  - name: "faq"
+    label: "Perguntas frequentes"
+    files:
+      - name: "faq"
+        label: "FAQ"
+        file: "content/faq.json"
+        fields:
+          - label: "Perguntas"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.q}}"
+            fields:
+              - { label: "Pergunta", name: "q", widget: "string" }
+              - { label: "Resposta", name: "a", widget: "text" }
+
+  - name: "services"
+    label: "Serviços"
+    files:
+      - name: "services"
+        label: "Serviços (Água / Alimentos / Controle)"
+        file: "content/services.json"
+        fields:
+          - label: "Serviços"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "Identificador (sem espaços/acentos)", name: "id", widget: "string" }
+              - { label: "Título", name: "title", widget: "string" }
+              - { label: "Texto de introdução", name: "intro", widget: "text" }
+              - label: "Itens analisados"
+                name: "items"
+                widget: "list"
+                summary: "{{fields.label}}"
+                fields:
+                  - { label: "Nome", name: "label", widget: "string" }
+                  - { label: "Norma/legislação", name: "norm", widget: "string" }
+              - label: "Público-alvo (chips)"
+                name: "chips"
+                widget: "list"
+                required: false
+                field: { label: "Chip", name: "chip", widget: "string" }
+              - { label: "Imagem (caminho em assets/, sem extensão)", name: "image", widget: "string", hint: "Ex.: assets/serv_agua — o site usa .webp com fallback .png automaticamente" }
+              - { label: "Texto alternativo da imagem", name: "imageAlt", widget: "string" }
+
+  - name: "team"
+    label: "Equipe"
+    files:
+      - name: "team"
+        label: "Equipe"
+        file: "content/team.json"
+        fields:
+          - label: "Integrantes"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "Nome", name: "name", widget: "string" }
+              - { label: "Cargo", name: "role", widget: "string", required: false }
+              - { label: "Imagem (caminho em assets/, sem extensão)", name: "image", widget: "string" }
+
+  - name: "testimonials"
+    label: "Depoimentos"
+    files:
+      - name: "testimonials"
+        label: "Depoimentos"
+        file: "content/testimonials.json"
+        fields:
+          - label: "Depoimentos"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "Depoimento", name: "quote", widget: "text" }
+              - { label: "Nome", name: "name", widget: "string" }
+              - { label: "Empresa", name: "company", widget: "string", required: false }
+
+  - name: "clients"
+    label: "Clientes (logos)"
+    files:
+      - name: "clients"
+        label: "Clientes"
+        file: "content/clients.json"
+        fields:
+          - label: "Clientes"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "Nome", name: "name", widget: "string" }
+              - { label: "Logo (caminho em assets/, sem extensão)", name: "logo", widget: "string" }
+
+  - name: "documents"
+    label: "Documentos & certificações"
+    files:
+      - name: "documents"
+        label: "Documentos"
+        file: "content/documents.json"
+        fields:
+          - label: "Documentos"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - { label: "Título", name: "title", widget: "string" }
+              - { label: "Arquivo PDF", name: "file", widget: "file", required: false, media_library: { config: { multiple: false } } }
+              - { label: "Texto do link", name: "linkLabel", widget: "string" }
