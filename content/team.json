@@ -1,7 +1,7 @@
 {
   "items": [
-    { "name": "Fabíola Medeiros Schultz", "role": "TODO — cargo a confirmar", "image": "assets/equipe1" },
-    { "name": "Vanessa Danesi dos Santos Cezar", "role": "TODO — cargo a confirmar", "image": "assets/equipe2" },
-    { "name": "Daniela Lazzarotto Perotto", "role": "TODO — cargo a confirmar", "image": "assets/equipe3" }
+    { "name": "Fabíola Medeiros Schultz", "role": "Responsável Legal · Bióloga, mestre em Microbiologia (UFRGS)", "image": "assets/equipe1" },
+    { "name": "Vanessa Danesi dos Santos Cezar", "role": "Responsável Técnica · Biomédica (IPA)", "image": "assets/equipe2" },
+    { "name": "Daniela Lazzarotto Perotto", "role": "Controle de Qualidade · Biomédica, mestranda (UFRGS)", "image": "assets/equipe3" }
   ]
 }

@@ -104,10 +104,19 @@
     (root || document).querySelectorAll('.snav').forEach(function (n) {
       n.addEventListener('click', function () {
         var t = document.getElementById(n.dataset.t);
+        if (!t) return;
         var card = t.querySelector('.card-img, .testi-card');
         var w = (card ? card.offsetWidth : 300) + 22;
         t.scrollBy({ left: n.classList.contains('next') ? w : -w, behavior: reduceMotion ? 'auto' : 'smooth' });
       });
+    });
+  }
+  function updateSliderArrows(trackId) {
+    var t = document.getElementById(trackId);
+    if (!t) return;
+    var hasOverflow = t.scrollWidth > t.clientWidth + 4;
+    document.querySelectorAll('.snav[data-t="' + trackId + '"]').forEach(function (n) {
+      n.style.display = hasOverflow ? '' : 'none';
     });
   }
 
@@ -302,7 +311,7 @@
     var wrap = document.getElementById('teamTrack');
     if (!wrap || !team) return;
     wrap.innerHTML = team.map(function (m) {
-      return '<figure class="card-img">' + picture(m.image, m.name, '', 'loading="lazy" width="700" height="1050"') +
+      return '<figure class="card-img">' + picture(m.image, m.name, '', 'loading="lazy" width="700" height="680"') +
         '<figcaption>' + escapeHtml(m.name) + (m.role ? '<span>' + escapeHtml(m.role) + '</span>' : '') + '</figcaption></figure>';
     }).join('');
   }
@@ -446,6 +455,12 @@
       observeCounters(document);
       wireToasts(document);
       wireSliders(document);
+      updateSliderArrows('teamTrack');
+      updateSliderArrows('testiTrack');
+      addEventListener('resize', function () {
+        updateSliderArrows('teamTrack');
+        updateSliderArrows('testiTrack');
+      });
     }).catch(function (err) {
       console.error('Erro ao carregar conteúdo dinâmico:', err);
     });
