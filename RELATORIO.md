@@ -130,6 +130,13 @@ documentos e as configurações gerais (e-mails, WhatsApp, portal, GA4 etc.).
 editar os mesmos itens sem tocar em código, com convite de usuário controlado pelo
 próprio cliente.
 
+**Cache do navegador ao trocar `assets/*`, `css/style.css` ou `js/main.js`:** esses
+arquivos são referenciados com `?v=N` (ex.: `logo.png?v=4`) — é assim que o navegador sabe
+buscar a versão nova em vez de usar uma cópia antiga guardada em cache. Ao substituir um
+desses arquivos mantendo o mesmo nome, suba o número da versão: `ASSET_VERSION` no topo de
+`js/main.js` (cobre as imagens carregadas via `content/*.json`) e o `?v=` nas tags
+`<link>`/`<script>` de `index.html`, `privacidade.html`, `termos.html` e `404.html`.
+
 ## Testes realizados nesta etapa
 
 - Renderização e contagem de itens de cada seção dinâmica (FAQ, serviços, equipe,
