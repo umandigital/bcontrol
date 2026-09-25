@@ -388,10 +388,16 @@
 
       var data = new FormData(form);
       var setor = data.get('setor');
-      var targetEmail = (cfg.sectorEmails && cfg.sectorEmails[setor]) || 'bcontrol@bcontrol.com.br';
-      data.set('setor_email', targetEmail);
+      var realTarget = (cfg.sectorEmails && cfg.sectorEmails[setor]) || 'bcontrol@bcontrol.com.br';
+      data.set('setor_email', realTarget);
       data.set('_subject', 'Novo pedido de orçamento — bcontrol (' + setor + ')');
-      if (cfg.testCcEmail) data.set('_cc', cfg.testCcEmail);
+      // Modo de teste: enquanto cfg.testCcEmail estiver preenchido, ele vira o destinatário
+      // real (em vez de só CC), porque cada endereço novo no formsubmit.co precisa que o
+      // DONO da caixa confirme um e-mail de ativação antes de receber qualquer coisa — e só
+      // quem tem acesso à caixa de teste consegue fazer isso. Assim que o cliente apagar
+      // testCcEmail do content/site.json, o formulário volta a entregar direto no e-mail
+      // real de cada setor (sectorEmails), sem precisar mexer em código.
+      var targetEmail = cfg.testCcEmail || realTarget;
       var endpoint = 'https://formsubmit.co/ajax/' + encodeURIComponent(targetEmail);
 
       var btn = form.querySelector('button[type="submit"]');
