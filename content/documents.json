@@ -1,8 +1,8 @@
 {
   "items": [
-    { "title": "Acreditação ISO/IEC 17025", "file": "", "linkLabel": "Baixar escopo" },
-    { "title": "Reconhecimento Rede Metrológica RS", "file": "", "linkLabel": "Baixar" },
-    { "title": "Alvarás de Funcionamento e Saúde", "file": "", "linkLabel": "Baixar" },
-    { "title": "Responsável Técnica", "file": "", "linkLabel": "Baixar" }
+    { "title": "Alvará de Funcionamento", "file": "assets/docs/alvara-de-funcionamento.pdf", "linkLabel": "Baixar" },
+    { "title": "Alvará de Saúde", "file": "assets/docs/alvara-de-saude.pdf", "linkLabel": "Baixar" },
+    { "title": "Reconhecimento Rede Metrológica / ISO 17025", "file": "assets/docs/certificado-reconhecimento.pdf", "linkLabel": "Baixar" },
+    { "title": "Responsável Técnica", "file": "assets/docs/responsavel-tecnica.pdf", "linkLabel": "Baixar" }
   ]
 }

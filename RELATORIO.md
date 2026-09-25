@@ -48,13 +48,12 @@ assets/                    imagens (.webp otimizado + .png de fallback) e favico
   HTML, só `preload="metadata"`), então o arquivo inteiro não é baixado à toa nesses casos.
 
 ### Formulários
-- Formulário de orçamento tem envio real via `fetch`, roteamento por setor (campo oculto
-  `setor_email` preenchido a partir de `content/site.json`), honeypot anti-spam.
-  **Falta apenas o endpoint** (Formspree/Web3Forms) e os e-mails de cada setor — enquanto
-  isso, o formulário avisa o visitante de forma clara em vez de fingir que enviou.
-- Link do WhatsApp (`wa.me`) já pré-preenche a mensagem; só falta o número oficial.
-- "Acessar resultados" e "Atualizar cadastro" levam ao destino informado em `site.json`
-  assim que as URLs forem preenchidas; até lá avisam o visitante em vez de simular.
+- Formulário de orçamento com envio real via `fetch` (endpoint formsubmit.co — ver
+  pendência 4), roteamento por setor, honeypot anti-spam.
+- Link do WhatsApp (`wa.me`) com número e mensagem reais.
+- "Acessar resultados" envia direto (POST real) para o portal de laudos externo;
+  "Atualizar cadastro" leva ao Google Forms real — ambos recuperados do site atual
+  (ver "Rodada 3" mais abaixo).
 
 ### SEO técnico
 - `<title>` e meta description reais, Open Graph/Twitter cards, `canonical`, dados
@@ -98,21 +97,25 @@ briefing) — o site já está preparado para recebê-las assim que chegarem, ba
    (Decap CMS) pode ser ativado como está, ou se precisamos de uma alternativa de painel
    próprio para JSON (cenário cPanel).
 2. **Domínio e HTTPS** — para atualizar `canonical`, Open Graph, `sitemap.xml`, `robots.txt`.
-3. **E-mails por setor** (Águas/Alimentos/Controle/Comercial) e **endpoint de formulário**
-   (Formspree/Web3Forms ou SMTP) — `content/site.json` → `sectorEmails` / `formEndpoint`.
-4. **URL do portal de resultados (LIMS)** e como funciona "esqueci a senha" —
-   `content/site.json` → `portalResultadosUrl`.
-5. **Destino de "Atualizar cadastro"** — `content/site.json` → `cadastroUrl`.
-6. **PDFs**: certificado ISO/IEC 17025 (escopo), alvarás, responsável técnica, kit de
-   coleta — subir em `assets/docs/` e preencher `content/documents.json` → `file`.
-7. **Depoimentos reais** (texto + nome + empresa autorizados) — `content/testimonials.json`.
-8. **Números reais** (parâmetros no escopo) — `content/site.json` → `stats`.
-9. **GA4** (Measurement ID) e eventual pixel de campanha — `content/site.json` → `ga4Id`.
-10. **WhatsApp oficial** — `content/site.json` → `whatsappNumber`.
-11. **Redes sociais** (Instagram/Facebook) — `content/site.json` → `socials`.
-12. **Revisão jurídica** de `privacidade.html` e `termos.html` (conteúdo modelo).
-13. **Cargos da equipe** — `content/team.json` → `role` já preenchido com o texto que estava
-    no protótipo; só falta o cliente confirmar se está correto e atualizado.
+3. **E-mails por setor "Águas" e "Alimentos"** — hoje apontam para `bcontrol@bcontrol.com.br`
+   (Atendimento Geral, e-mail real já usado no site atual) por não haver um endereço
+   dedicado a esses dois setores nem no site nem no material recebido. "Controle de
+   qualidade" e "Comercial" já usam e-mails reais e específicos (ver Rodada 3 abaixo).
+   Se quiser endereços próprios para Águas/Alimentos, é só avisar.
+4. **Confirmar recebimento do formulário de orçamento**: o endpoint (formsubmit.co) está
+   configurado, mas a primeira mensagem real enviada pelo site vai disparar um e-mail de
+   confirmação para `bcontrol@bcontrol.com.br` — **alguém precisa clicar no link desse
+   e-mail** para o formulário passar a funcionar de verdade (é assim que o formsubmit.co
+   evita spam; não precisa criar conta, é só esse clique único).
+5. **Depoimentos reais** (texto + nome + empresa autorizados) — `content/testimonials.json`.
+6. **Números reais** (parâmetros no escopo) — `content/site.json` → `stats`.
+7. **GA4** (Measurement ID) e eventual pixel de campanha — não existia no site atual;
+   `content/site.json` → `ga4Id`.
+8. **Instagram** — não encontrado no site atual (só havia Facebook, já linkado) —
+   `content/site.json` → `socials.instagram`.
+9. **Revisão jurídica** de `privacidade.html` e `termos.html` (conteúdo modelo).
+10. **Cargos da equipe** — `content/team.json` → `role` preenchido com o texto que estava
+    no protótipo; só falta confirmar se está correto e atualizado.
 
 Nenhuma dessas pendências quebra o site: todos os pontos aparecem com um aviso claro para
 o visitante (ex.: "aguardando configuração") em vez de fingir uma ação que não acontece.
@@ -152,6 +155,39 @@ próprio cliente.
   protótipo) — corrigido; agora também escondem as setas quando não há o que rolar.
 - Logo do cabeçalho/rodapé substituído pela marca nova enviada pelo cliente.
 - Vídeo do herói (`hero.mp4`/`hero.webm`) integrado e comprimido (45MB → ~10-11MB).
+
+## Rodada 3 — integrações reais recuperadas do site atual (bcontrol.com.br)
+
+Em vez de esperar a resposta da empresa terceirizada (Sline) sobre um iframe novo para o
+portal de resultados, fui direto no site atual (`www.bcontrol.com.br`) e encontrei que ele
+já tem uma integração real e funcionando com o portal de laudos — bem mais simples do que
+um iframe: um formulário HTML puro que envia (POST) para `resultados.com.br`. Aproveitei
+essa mesma integração, e de quebra recuperei outros elementos reais que já existiam no ar:
+
+- **Portal de resultados**: formulário "Chave/Senha" agora envia direto para
+  `https://www.resultados.com.br/index.aspx?origem=BIOCONTROL` (mesmo endpoint que o site
+  atual já usa) — **funciona de verdade, não depende mais da Sline**.
+- **Atualizar cadastro**: linkado para o Google Forms real que já estava em uso
+  (`forms.gle/hZG2yAordd6pP9uJ8`).
+- **Kit de coleta**: PDF real baixado do site atual e disponível para download
+  (`assets/docs/coleta_de_amostras.pdf`).
+- **Documentos & certificações**: os 4 PDFs reais (Alvará de Funcionamento, Alvará de
+  Saúde, Reconhecimento Rede Metrológica/ISO 17025, Responsável Técnica) baixados do site
+  atual e hospedados em `assets/docs/`.
+- **Pesquisa de satisfação**: link real do Google Forms recolocado no rodapé.
+- **Facebook**: link real (`facebook.com/biocontrolrs`) — Instagram não existe no site atual.
+- **WhatsApp**: número real (mesmo telefone fixo usado como WhatsApp Business no site atual)
+  — `(51) 3434-2401`.
+- **E-mails**: `comercial@bcontrol.com.br` (setor Comercial) e `daniela@bcontrol.com.br`
+  (Controle de Qualidade) confirmados reais; `bcontrol@bcontrol.com.br` (Atendimento
+  Geral) usado como padrão para Águas/Alimentos, que não tinham endereço próprio.
+- **Formulário de orçamento**: como o site atual usa Contact Form 7 (plugin de WordPress,
+  não portável para um site estático), configurei um endpoint equivalente e gratuito
+  (formsubmit.co) apontando para `bcontrol@bcontrol.com.br` — ver pendência 4 acima sobre
+  o clique de confirmação único.
+
+Isso resolve, sem precisar de mais nenhuma informação do cliente, praticamente todas as
+integrações que antes dependiam de dados externos.
 
 ## Ainda no checklist do briefing (próximos passos, após as pendências acima)
 

@@ -36,7 +36,6 @@ collections:
           - { label: "Mensagem padrão do WhatsApp", name: "whatsappMessage", widget: "string" }
           - { label: "Telefone (exibição)", name: "phoneDisplay", widget: "string" }
           - { label: "Endereço", name: "address", widget: "string" }
-          - { label: "URL do portal de resultados (LIMS)", name: "portalResultadosUrl", widget: "string" }
           - { label: "URL de atualização de cadastro", name: "cadastroUrl", widget: "string" }
           - { label: "Google Analytics 4 (Measurement ID, ex. G-XXXXXXX)", name: "ga4Id", widget: "string", required: false }
           - { label: "Endpoint do formulário (Formspree/Web3Forms)", name: "formEndpoint", widget: "string" }

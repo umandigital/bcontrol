@@ -60,15 +60,17 @@
 <header class="hd">
   <div class="client"><div class="wrap">
     <span class="lab">🔒 Área do cliente</span>
-    <form id="formResult" autocomplete="off">
+    <form id="formResult" action="https://www.resultados.com.br/index.aspx?origem=BIOCONTROL" method="post" autocomplete="off">
+      <input type="hidden" name="frame" value="S">
+      <input type="hidden" name="redir" value="http://www.resultados.com.br">
       <label class="sr-only" for="loginChave">Chave</label>
-      <input class="cinput" id="loginChave" name="chave" placeholder="Chave" aria-label="Chave">
+      <input class="cinput" id="loginChave" name="identificacao" maxlength="20" placeholder="Chave" aria-label="Chave">
       <label class="sr-only" for="loginSenha">Senha</label>
-      <input class="cinput" id="loginSenha" name="senha" type="password" placeholder="Senha" aria-label="Senha">
+      <input class="cinput" id="loginSenha" name="senha" maxlength="8" type="password" placeholder="Senha" aria-label="Senha">
       <button class="mini-teal" type="submit">Acessar resultados</button>
     </form>
-    <a class="lnk" id="cadastroLink" href="#contato" data-toast="Atualização de cadastro: aguardando destino definitivo (ver RELATORIO.md)">Atualizar cadastro</a>
-    <button class="kit" type="button" data-toast="Kit de coleta: aguardando arquivo/PDF do cliente (ver RELATORIO.md)">▤ <span class="kit-label">Solicitar kit</span></button>
+    <a class="lnk" id="cadastroLink" href="https://forms.gle/hZG2yAordd6pP9uJ8" target="_blank" rel="noopener">Atualizar cadastro</a>
+    <a class="kit" href="assets/docs/coleta_de_amostras.pdf" download data-ga="download_kit">▤ <span class="kit-label">Solicitar kit</span></a>
     <a class="cbtn-orc" href="#contato">Solicitar orçamento</a>
   </div></div>
   <div class="main">
@@ -231,7 +233,7 @@
       </div>
       <div><h4>A bcontrol</h4><a href="#quem">Quem somos</a><a href="#dif">Diferenciais</a><a href="#docs">Certificações</a></div>
       <div><h4>Serviços</h4><a href="#serv">O que analisamos</a><a href="#equipe">Equipe</a><a href="#contato">Contato</a></div>
-      <div><h4>Institucional</h4><a href="privacidade.html">Política de Privacidade (LGPD)</a><a href="termos.html">Termos de Uso</a><a href="privacidade.html#acessibilidade">Acessibilidade</a></div>
+      <div><h4>Institucional</h4><a href="https://docs.google.com/forms/d/e/1FAIpQLSdmC50RH0NSR2UGfiISusCcfM5GoF6Qg5H8NadNYwDJ1VHHrw/viewform" target="_blank" rel="noopener">Pesquisa de satisfação</a><a href="privacidade.html">Política de Privacidade (LGPD)</a><a href="termos.html">Termos de Uso</a><a href="privacidade.html#acessibilidade">Acessibilidade</a></div>
     </div>
     <div class="copy"><span>© 2026 bcontrol · <span data-address>Rodovia Tapir Rocha, 7000 — Sala 170/174, Viamão/RS · TECNOPUC</span> · <span data-phone-display>(51) 3434-2401</span></span><span>Feito por Uman</span></div>
   </div>

@@ -351,19 +351,6 @@
       }
     });
 
-    var portalForm = document.getElementById('formResult');
-    var hasPortal = !/^TODO/.test(cfg.portalResultadosUrl || '');
-    if (portalForm) {
-      portalForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        if (hasPortal) {
-          window.open(cfg.portalResultadosUrl, '_blank', 'noopener');
-        } else {
-          say('Portal de resultados: aguardando URL do LIMS externo (ver RELATORIO.md)');
-        }
-      });
-    }
-
     var cadastroLink = document.getElementById('cadastroLink');
     if (cadastroLink) {
       var hasCadastro = !/^TODO/.test(cfg.cadastroUrl || '');
