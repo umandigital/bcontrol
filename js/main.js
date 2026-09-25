@@ -391,6 +391,7 @@
       var realTarget = (cfg.sectorEmails && cfg.sectorEmails[setor]) || 'bcontrol@bcontrol.com.br';
       data.set('setor_email', realTarget);
       data.set('_subject', 'Novo pedido de orçamento — bcontrol (' + setor + ')');
+      data.set('_language', 'pt-BR');
       // Modo de teste: enquanto cfg.testCcEmail estiver preenchido, ele vira o destinatário
       // real (em vez de só CC), porque cada endereço novo no formsubmit.co precisa que o
       // DONO da caixa confirme um e-mail de ativação antes de receber qualquer coisa — e só
