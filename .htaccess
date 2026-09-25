@@ -1,0 +1,23 @@
+# Evita que os navegadores guardem em cache as páginas HTML (index.html, privacidade.html
+# etc.) — sem isso, uma atualização do site pode não aparecer para quem já visitou antes,
+# mesmo depois de reenviar os arquivos, porque o navegador reaproveita a página antiga em
+# cache local em vez de buscar a nova no servidor.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # Imagens, vídeos, CSS e JS já usam "?v=" no nome para forçar atualização quando o
+  # conteúdo muda, então podem ficar em cache por mais tempo sem problema.
+  <FilesMatch "\.(css|js|png|webp|jpg|jpeg|svg|ico|mp4|webm|pdf)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+ErrorDocument 404 /404.html

@@ -196,6 +196,26 @@ essa mesma integração, e de quebra recuperei outros elementos reais que já ex
 Isso resolve, sem precisar de mais nenhuma informação do cliente, praticamente todas as
 integrações que antes dependiam de dados externos.
 
+## Rodada 4 — cache do navegador resolvido na raiz (.htaccess)
+
+Vários "bugs" reportados nas rodadas de teste (logo antigo, foto com endereço embutido,
+aviso de formulário desatualizado, e o mais grave: o botão "Acessar resultados" abrindo uma
+aba em branco) tinham a mesma causa real: o **navegador de quem testava guardava uma cópia
+antiga do `index.html`** em cache, mesmo com o arquivo já atualizado no servidor. O caso da
+aba em branco em particular era o `index.html` de uma versão bem anterior (antes da Rodada 3),
+que ainda tentava abrir uma URL de placeholder numa aba nova — testei o login com as
+credenciais reais fornecidas e confirmei que a integração funciona perfeitamente (login
+bem-sucedido, navega para `resultados.com.br/Lista/Index` na mesma aba).
+
+Correção definitiva: adicionado `.htaccess` na raiz do site instruindo o Apache a nunca
+deixar o navegador guardar páginas `.html` em cache (`Cache-Control: no-cache, no-store,
+must-revalidate`), mantendo cache normal só para os arquivos versionados (`css`, `js`,
+imagens, PDFs, vídeo). Também adicionadas as mesmas diretivas como `<meta http-equiv>` no
+`<head>` de cada página, como reforço para o caso de o `.htaccess` não ser aplicado (ex.:
+módulo `mod_headers` desativado na hospedagem). **A partir de agora, qualquer atualização
+enviada aparece automaticamente no próximo carregamento da página, sem precisar de
+Ctrl+Shift+R.**
+
 ## Ainda no checklist do briefing (próximos passos, após as pendências acima)
 
 - Minificação de CSS/JS para produção (hoje estão legíveis/comentados; minificar no
