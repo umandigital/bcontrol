@@ -38,7 +38,7 @@ collections:
           - { label: "Endereço", name: "address", widget: "string" }
           - { label: "URL de atualização de cadastro", name: "cadastroUrl", widget: "string" }
           - { label: "Google Analytics 4 (Measurement ID, ex. G-XXXXXXX)", name: "ga4Id", widget: "string", required: false }
-          - { label: "Endpoint do formulário (Formspree/Web3Forms)", name: "formEndpoint", widget: "string" }
+          - { label: "E-mail extra em cópia (CC) nos pedidos de orçamento — deixar vazio para desativar", name: "testCcEmail", widget: "string", required: false }
           - label: "E-mails por setor"
             name: "sectorEmails"
             widget: "object"

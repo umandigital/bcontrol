@@ -5,7 +5,7 @@
   "address": "Rodovia Tapir Rocha, 7000 — Sala 170/174, Viamão/RS · TECNOPUC",
   "cadastroUrl": "https://forms.gle/hZG2yAordd6pP9uJ8",
   "ga4Id": "",
-  "formEndpoint": "https://formsubmit.co/ajax/bcontrol@bcontrol.com.br",
+  "testCcEmail": "luciano@umandigital.com.br",
   "sectorEmails": {
     "Águas": "bcontrol@bcontrol.com.br",
     "Alimentos": "bcontrol@bcontrol.com.br",

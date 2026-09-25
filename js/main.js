@@ -386,22 +386,17 @@
       var honeypot = form.querySelector('[name="empresa_site"]');
       if (honeypot && honeypot.value) return; // bot detectado, ignora silenciosamente
 
-      var endpointConfigured = cfg.formEndpoint && !/^TODO/.test(cfg.formEndpoint);
       var data = new FormData(form);
       var setor = data.get('setor');
-      data.set('setor_email', (cfg.sectorEmails && cfg.sectorEmails[setor]) || '');
-
-      if (!endpointConfigured) {
-        if (msgEl) {
-          msgEl.textContent = 'Formulário pronto, aguardando configuração do serviço de envio (ver RELATORIO.md). Seus dados não foram enviados.';
-          msgEl.className = 'field-msg err';
-        }
-        return;
-      }
+      var targetEmail = (cfg.sectorEmails && cfg.sectorEmails[setor]) || 'bcontrol@bcontrol.com.br';
+      data.set('setor_email', targetEmail);
+      data.set('_subject', 'Novo pedido de orçamento — bcontrol (' + setor + ')');
+      if (cfg.testCcEmail) data.set('_cc', cfg.testCcEmail);
+      var endpoint = 'https://formsubmit.co/ajax/' + encodeURIComponent(targetEmail);
 
       var btn = form.querySelector('button[type="submit"]');
       if (btn) btn.disabled = true;
-      fetch(cfg.formEndpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+      fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
         .then(function (r) { if (!r.ok) throw new Error('erro'); return r.json().catch(function () { return {}; }); })
         .then(function () {
           if (msgEl) { msgEl.textContent = 'Pedido enviado! Em breve nossa equipe entrará em contato.'; msgEl.className = 'field-msg ok'; }
