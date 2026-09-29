@@ -104,8 +104,9 @@ nav.menu a.active{color:var(--orange);border-bottom-color:var(--orange)}
 .quem-badge{position:absolute;right:-10px;bottom:-18px;background:rgba(255,255,255,.6);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.8);border-radius:16px;padding:16px 18px;max-width:220px;font-weight:700;color:var(--teal-d);box-shadow:0 20px 40px -20px rgba(14,58,52,.4)}
 @media(max-width:520px){.quem-badge{position:static;margin-top:14px;max-width:none}}
 
-.quem-extra{margin-top:48px;padding-top:40px;border-top:1px solid var(--line);max-width:760px}
+.quem-extra{margin-top:48px;padding-top:40px;border-top:1px solid var(--line)}
 .quem-extra h3{font-size:clamp(19px,2.2vw,24px);color:var(--navy);margin-bottom:12px}
+.quem-extra p{max-width:none}
 
 /* missão / visão / valores */
 .mvv{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:32px}
