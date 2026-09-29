@@ -1,0 +1,9 @@
+{
+  "items": [
+    { "label": "Indústrias", "image": "assets/segmento_industrias" },
+    { "label": "Food service", "image": "assets/segmento_food_service" },
+    { "label": "Condomínios", "image": "assets/segmento_condominios" },
+    { "label": "Farmácias", "image": "assets/segmento_farmacias" },
+    { "label": "Clínicas", "image": "assets/segmento_clinicas" }
+  ]
+}

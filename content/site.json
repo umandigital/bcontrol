@@ -19,7 +19,6 @@
   "stats": [
     { "value": 14, "suffix": "", "prefix": "", "label": "anos de atuação" },
     { "value": 1500, "suffix": "", "prefix": "+", "label": "clientes ativos" },
-    { "value": 25, "suffix": "%", "prefix": "", "label": "crescimento médio ao ano" },
-    { "text": "+[a conf.]", "label": "parâmetros no escopo" }
+    { "value": 25, "suffix": "%", "prefix": "", "label": "crescimento médio ao ano" }
   ]
 }

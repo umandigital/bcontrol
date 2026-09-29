@@ -13,11 +13,12 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
-  function picture(basePath, alt, cls, extraAttrs) {
+  function picture(basePath, alt, cls, extraAttrs, fallbackExt) {
     extraAttrs = extraAttrs || '';
+    fallbackExt = fallbackExt || 'png';
     return '<picture>' +
       '<source srcset="' + basePath + '.webp?v=' + ASSET_VERSION + '" type="image/webp">' +
-      '<img src="' + basePath + '.png?v=' + ASSET_VERSION + '" alt="' + escapeHtml(alt) + '"' + (cls ? ' class="' + cls + '"' : '') + ' ' + extraAttrs + '>' +
+      '<img src="' + basePath + '.' + fallbackExt + '?v=' + ASSET_VERSION + '" alt="' + escapeHtml(alt) + '"' + (cls ? ' class="' + cls + '"' : '') + ' ' + extraAttrs + '>' +
       '</picture>';
   }
   function fetchJSON(path) {
@@ -336,6 +337,25 @@
     }).join('');
   }
 
+  function renderQuemCarousel(segments) {
+    var wrap = document.getElementById('quemCarousel');
+    if (!wrap || !segments || !segments.length) return;
+    wrap.innerHTML = segments.map(function (s, i) {
+      return '<div class="slide' + (i === 0 ? ' active' : '') + '">' +
+        picture(s.image, 'bcontrol atende ' + s.label, '', i === 0 ? '' : 'loading="lazy"', 'jpg') +
+        '</div>';
+    }).join('');
+
+    if (segments.length < 2 || reduceMotion) return;
+    var slides = [].slice.call(wrap.querySelectorAll('.slide'));
+    var i = 0;
+    setInterval(function () {
+      slides[i].classList.remove('active');
+      i = (i + 1) % slides.length;
+      slides[i].classList.add('active');
+    }, 4000);
+  }
+
   function applySiteConfig(cfg) {
     siteConfig = cfg;
     var waHref = 'https://wa.me/' + String(cfg.whatsappNumber || '').replace(/\D/g, '') + '?text=' + encodeURIComponent(cfg.whatsappMessage || '');
@@ -433,9 +453,10 @@
       fetchJSON('content/documents.json'),
       fetchJSON('content/team.json'),
       fetchJSON('content/clients.json'),
-      fetchJSON('content/testimonials.json')
+      fetchJSON('content/testimonials.json'),
+      fetchJSON('content/segments.json')
     ]).then(function (results) {
-      var cfg = results[0], services = results[1], faq = results[2], docs = results[3], team = results[4], clients = results[5], testis = results[6];
+      var cfg = results[0], services = results[1], faq = results[2], docs = results[3], team = results[4], clients = results[5], testis = results[6], segments = results[7];
       renderStats(cfg.stats);
       renderServices(services.items);
       renderFaq(faq.items);
@@ -443,6 +464,7 @@
       renderTeam(team.items);
       renderClients(clients.items);
       renderTestimonials(testis.items);
+      renderQuemCarousel(segments.items);
       applySiteConfig(cfg);
       observeReveal(document);
       observeCounters(document);

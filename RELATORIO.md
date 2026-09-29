@@ -216,6 +216,16 @@ módulo `mod_headers` desativado na hospedagem). **A partir de agora, qualquer a
 enviada aparece automaticamente no próximo carregamento da página, sem precisar de
 Ctrl+Shift+R.**
 
+## Rodada 5 — carrossel de segmentos e limpeza da faixa de números
+
+- Seção "Quem somos": a foto única deu lugar a um **carrossel automático** (troca sozinha
+  a cada 4s, com transição suave) com as 5 fotos de segmentos enviadas pelo cliente
+  (Indústrias, Food service, Condomínios, Farmácias, Clínicas), cada uma já com o rótulo
+  aplicado na própria imagem. Editável em `content/segments.json` (ou pelo `/admin`).
+  Pausa automaticamente para quem usa "reduzir movimento" no sistema.
+- Removido o indicador "+[a conf.] parâmetros no escopo" da faixa de números (ficaram só os
+  3 números reais: anos de atuação, clientes ativos, crescimento médio).
+
 ## Ainda no checklist do briefing (próximos passos, após as pendências acima)
 
 - Minificação de CSS/JS para produção (hoje estão legíveis/comentados; minificar no

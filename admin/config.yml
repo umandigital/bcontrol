@@ -155,6 +155,21 @@ collections:
               - { label: "Nome", name: "name", widget: "string" }
               - { label: "Logo (caminho em assets/, sem extensão)", name: "logo", widget: "string" }
 
+  - name: "segments"
+    label: "Segmentos (carrossel Quem somos)"
+    files:
+      - name: "segments"
+        label: "Segmentos"
+        file: "content/segments.json"
+        fields:
+          - label: "Fotos do carrossel"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.label}}"
+            fields:
+              - { label: "Nome do segmento", name: "label", widget: "string" }
+              - { label: "Imagem (caminho em assets/, sem extensão)", name: "image", widget: "string" }
+
   - name: "documents"
     label: "Documentos & certificações"
     files:
