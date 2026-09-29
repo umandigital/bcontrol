@@ -226,6 +226,23 @@ Ctrl+Shift+R.**
 - Removido o indicador "+[a conf.] parâmetros no escopo" da faixa de números (ficaram só os
   3 números reais: anos de atuação, clientes ativos, crescimento médio).
 
+## Rodada 6 — texto novo do "Quem somos" (maior, reestruturado)
+
+O cliente enviou um texto bem mais completo para "Quem somos", que não cabia mais no
+layout compacto anterior (duas colunas, texto curto + foto). Reestruturado assim, mantendo
+100% do texto novo:
+
+- O parágrafo de abertura ficou mais enxuto visualmente: a lista de segmentos
+  ("Atuamos lado a lado com: Indústrias, Food service...") virou **chips** (tags),
+  reaproveitando um padrão visual que já existia no site, em vez de uma lista com
+  marcadores — fica mais compacto e ainda conecta com o carrossel de fotos ao lado.
+- "Excelência técnica e atendimento consultivo" virou um bloco de texto logo abaixo,
+  dentro da mesma seção "Quem somos".
+- "Nosso Propósito Institucional" (Missão / Visão / Valores) virou uma **seção nova**,
+  com os três em cartões lado a lado (empilham no mobile). Os textos de Missão e Visão
+  batem com o que já existia no site atual da bcontrol, então é conteúdo real e
+  consistente, não inventado.
+
 ## Ainda no checklist do briefing (próximos passos, após as pendências acima)
 
 - Minificação de CSS/JS para produção (hoje estão legíveis/comentados; minificar no
