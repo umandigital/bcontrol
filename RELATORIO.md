@@ -324,7 +324,49 @@ em logo PNG, achatamento correto para fundo branco no fallback `.jpg` dos Segmen
 remoção dos arquivos antigos após a troca.
 
 Aproveitada a rodada para trocar também a foto do escritório (seção de Orçamento) pela
-nova enviada pelo cliente (`assets/escritorio.png`/`.webp`, versão `?v=5`).
+nova enviada pelo cliente (`assets/escritorio.png`/`.webp`, versão `?v=5`, depois corrigida
+na Rodada 12 abaixo).
+
+## Rodada 11 — galeria institucional (fotos e vídeos) em "Quem somos"
+
+Nova seção "Conheça toda a estrutura da Bcontrol" logo abaixo de "Excelência técnica",
+dentro da mesma dobra institucional — um carrossel paginado (setas + indicadores) com
+fotos e vídeos do YouTube, cada item abrindo ampliado em um modal ao clique. Totalmente
+administrável pelo painel (`/admin` → "Galeria institucional"), sem precisar mexer em
+código:
+
+- Cada item tem um **Título** (uso só interno/acessibilidade — não aparece na tela, a
+  pedido do cliente: o layout de referência tinha legenda visível, mas ficou definido
+  que não é necessária), um **Tipo** (Imagem ou Vídeo do YouTube), um campo de **upload
+  de imagem** (mesmo mecanismo de redimensionamento/otimização das Rodadas 10) e um campo
+  de **vídeo do YouTube** — aceita colar a URL completa (`youtube.com/watch?v=...`,
+  `youtu.be/...`, `/embed/...`, `/shorts/...`) ou só o código do vídeo; o painel extrai o
+  código sozinho.
+- No site, vídeos mostram a miniatura oficial do YouTube (sem precisar fazer upload de
+  capa) com um ícone de "play"; imagens mostram um ícone de foto — ambos no canto inferior
+  direito da miniatura, como no layout de referência.
+- Carrossel com paginação por página inteira (não item a item), setas e bolinhas
+  indicadoras, que só aparecem quando há mais itens do que cabem na tela.
+- Modal (lightbox): imagem em tamanho ampliado, ou o vídeo do YouTube incorporado
+  (`iframe`) já em reprodução; fecha pelo X, clicando fora, ou com a tecla Esc.
+- Se não houver nenhum item cadastrado, a seção inteira fica oculta (não aparece uma
+  faixa vazia) — assim que o primeiro item for cadastrado pelo painel, ela aparece
+  automaticamente.
+- `content/gallery.json` começa vazio (`"items": []`) — as fotos/vídeos reais devem ser
+  cadastrados pelo cliente ou pela agência direto no painel.
+
+**Testado**: renderização e paginação (8 itens de teste, 2 páginas), abertura/fechamento
+do modal para imagem e para vídeo (Esc, X e clique fora), extração do código do YouTube a
+partir de 4 formatos de URL diferentes — tudo via Playwright/Chromium e testes unitários
+da extração.
+
+## Rodada 12 — corrigida sombra duplicada na foto do escritório
+
+A imagem enviada pelo cliente (Rodada 10) já vinha com uma moldura branca arredondada e
+sombra próprias "embutidas" (um card/mockup pronto), que o CSS do site duplicava ao
+aplicar seu próprio `border-radius` + `box-shadow` por cima. Recortada a moldura/sombra
+original da imagem antes de redimensionar, mantendo só a foto real — agora só a sombra do
+CSS do site aparece.
 
 ## Rodada 8 — formulário de orçamento passou a usar envio próprio (`envio.php`)
 

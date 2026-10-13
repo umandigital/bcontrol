@@ -40,6 +40,9 @@ em último caso, **775**).
    trocados direto pelo painel** — é só escolher o novo arquivo (JPG, PNG ou WEBP) que o
    site redimensiona e otimiza sozinho. Isso depende da extensão **GD do PHP**, que vem
    habilitada por padrão em praticamente toda hospedagem cPanel.
+5. Tem também a **"Galeria institucional (fotos e vídeos)"**, que mostra o carrossel
+   "Conheça toda a estrutura da Bcontrol" no site — ela começa vazia, então essa seção só
+   aparece no site depois que o primeiro item for cadastrado ali.
 
 ## 4. Antes de considerar "no ar de vez"
 
@@ -56,6 +59,8 @@ produção"**. Os pontos principais:
   `canonical` de cada página (hoje configurados para `www.bcontrol.com.br`).
 - Revisão jurídica de `privacidade.html` e `termos.html` (conteúdo modelo, ainda não
   revisado por advogado).
+- Cadastrar fotos/vídeos reais na "Galeria institucional" pelo painel (começa vazia; a
+  seção só aparece no site depois do primeiro item cadastrado).
 
 ## 5. Dúvidas comuns
 

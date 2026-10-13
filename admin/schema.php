@@ -120,6 +120,23 @@ return [
     ],
   ],
 
+  'gallery' => [
+    'label' => 'Galeria institucional (fotos e vídeos)',
+    'file' => 'content/gallery.json',
+    'root' => 'list',
+    'itemType' => 'object',
+    'itemLabelField' => 'title',
+    'fields' => [
+      ['name' => 'title', 'label' => 'Título (uso interno — não aparece na tela, só ajuda a identificar o item aqui no painel)', 'type' => 'string'],
+      ['name' => 'type', 'label' => 'Tipo', 'type' => 'select', 'options' => [
+        ['value' => 'image', 'label' => 'Imagem'],
+        ['value' => 'video', 'label' => 'Vídeo do YouTube'],
+      ]],
+      ['name' => 'image', 'label' => 'Imagem', 'type' => 'image', 'uploadDir' => 'assets', 'maxWidth' => 700, 'fallbackExt' => 'jpg', 'hint' => 'Preencha apenas se o Tipo for Imagem.'],
+      ['name' => 'youtubeId', 'label' => 'Vídeo do YouTube', 'type' => 'youtube', 'hint' => 'Preencha apenas se o Tipo for Vídeo. Pode colar a URL completa (ex.: https://youtu.be/XXXXXXXXXXX) ou só o código do vídeo.'],
+    ],
+  ],
+
   'documents' => [
     'label' => 'Documentos & certificações',
     'file' => 'content/documents.json',

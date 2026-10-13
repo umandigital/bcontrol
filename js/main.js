@@ -125,6 +125,124 @@
     });
   }
 
+  // ---------- galeria institucional (fotos e vídeos) + lightbox ----------
+  var ICON_IMAGE = '<span class="gitem-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-8.5 10.5 2.5 3.01L16.5 12l4.5 6H3l3.5-4.5z"/></svg></span>';
+  var ICON_PLAY = '<span class="gitem-icon play" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></span>';
+
+  function renderGallery(items) {
+    var block = document.getElementById('galleryBlock');
+    var track = document.getElementById('galleryTrack');
+    if (!block || !track) return;
+    items = (items || []).filter(function (it) { return it && (it.type === 'video' ? it.youtubeId : it.image); });
+    if (!items.length) { block.hidden = true; return; }
+    block.hidden = false;
+
+    track.innerHTML = items.map(function (it, i) {
+      var alt = escapeHtml(it.title || '');
+      var media = it.type === 'video'
+        ? '<img src="https://img.youtube.com/vi/' + encodeURIComponent(it.youtubeId) + '/hqdefault.jpg" alt="' + alt + '" loading="lazy">'
+        : picture(it.image, it.title || '', '', 'loading="lazy"', 'jpg');
+      var icon = it.type === 'video' ? ICON_PLAY : ICON_IMAGE;
+      return '<button type="button" class="gallery-item" data-idx="' + i + '" aria-label="Ampliar ' + (alt || (it.type === 'video' ? 'vídeo' : 'imagem')) + '">' + media + icon + '</button>';
+    }).join('');
+
+    track.querySelectorAll('.gallery-item').forEach(function (el) {
+      el.addEventListener('click', function () { openLightbox(items[+el.dataset.idx]); });
+    });
+
+    wireGalleryCarousel();
+  }
+
+  function wireGalleryCarousel() {
+    var track = document.getElementById('galleryTrack');
+    var dotsWrap = document.getElementById('galleryDots');
+    var prevBtn = document.querySelector('.gnav.prev[data-g="galleryTrack"]');
+    var nextBtn = document.querySelector('.gnav.next[data-g="galleryTrack"]');
+    if (!track || !dotsWrap) return;
+
+    function stepWidth() {
+      var first = track.querySelector('.gallery-item');
+      if (!first) return 214;
+      var gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || '14') || 14;
+      return first.getBoundingClientRect().width + gap;
+    }
+    function perPage() { return Math.max(1, Math.round(track.clientWidth / stepWidth())); }
+    function pageWidth() { return stepWidth() * perPage(); }
+    function totalPages() {
+      var total = track.querySelectorAll('.gallery-item').length;
+      return Math.max(1, Math.ceil(total / perPage()));
+    }
+    function currentPage() {
+      var pw = pageWidth();
+      return pw ? Math.round(track.scrollLeft / pw) : 0;
+    }
+    function updateUI() {
+      var pages = totalPages();
+      var multiPage = pages > 1;
+      if (prevBtn) prevBtn.style.display = multiPage ? '' : 'none';
+      if (nextBtn) nextBtn.style.display = multiPage ? '' : 'none';
+      var page = currentPage();
+      Array.prototype.forEach.call(dotsWrap.children, function (b, i) {
+        b.classList.toggle('active', i === page);
+      });
+    }
+    function buildDots() {
+      var pages = totalPages();
+      dotsWrap.innerHTML = '';
+      dotsWrap.style.display = pages > 1 ? '' : 'none';
+      for (var i = 0; i < pages; i++) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Página ' + (i + 1));
+        (function (idx) { b.addEventListener('click', function () { goToPage(idx); }); })(i);
+        dotsWrap.appendChild(b);
+      }
+      updateUI();
+    }
+    function goToPage(i) {
+      track.scrollTo({ left: i * pageWidth(), behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+
+    buildDots();
+    track.addEventListener('scroll', function () {
+      clearTimeout(track._gt);
+      track._gt = setTimeout(updateUI, 80);
+    }, { passive: true });
+    if (prevBtn) prevBtn.addEventListener('click', function () { track.scrollBy({ left: -pageWidth(), behavior: reduceMotion ? 'auto' : 'smooth' }); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { track.scrollBy({ left: pageWidth(), behavior: reduceMotion ? 'auto' : 'smooth' }); });
+    addEventListener('resize', buildDots);
+  }
+
+  function openLightbox(item) {
+    if (!item) return;
+    var lb = document.getElementById('lightbox');
+    var inner = document.getElementById('lightboxInner');
+    if (!lb || !inner) return;
+    if (item.type === 'video') {
+      inner.innerHTML = '<div class="yt-wrap"><iframe src="https://www.youtube.com/embed/' + encodeURIComponent(item.youtubeId) + '?autoplay=1&rel=0" title="' + escapeHtml(item.title || 'Vídeo') + '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>';
+    } else {
+      inner.innerHTML = picture(item.image, item.title || '', '', '', 'jpg');
+    }
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    var lb = document.getElementById('lightbox');
+    var inner = document.getElementById('lightboxInner');
+    if (!lb) return;
+    lb.classList.remove('open');
+    if (inner) inner.innerHTML = '';
+    document.body.style.overflow = '';
+  }
+  function wireLightbox() {
+    var lb = document.getElementById('lightbox');
+    var closeBtn = document.getElementById('lightboxClose');
+    if (!lb) return;
+    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+    lb.addEventListener('click', function (e) { if (e.target === lb) closeLightbox(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
+  }
+
   // ---------- toast ----------
   var toastEl = document.getElementById('toast');
   var tm;
@@ -436,6 +554,7 @@
     observeCounters(document);
     wireToasts(document);
     wireSliders(document);
+    wireLightbox();
     makeParallax('dif', 'difWater', 180);
     makeParallax('cta', 'ctaBg', 150);
 
@@ -447,9 +566,10 @@
       fetchJSON('content/team.json'),
       fetchJSON('content/clients.json'),
       fetchJSON('content/testimonials.json'),
-      fetchJSON('content/segments.json')
+      fetchJSON('content/segments.json'),
+      fetchJSON('content/gallery.json')
     ]).then(function (results) {
-      var cfg = results[0], services = results[1], faq = results[2], docs = results[3], team = results[4], clients = results[5], testis = results[6], segments = results[7];
+      var cfg = results[0], services = results[1], faq = results[2], docs = results[3], team = results[4], clients = results[5], testis = results[6], segments = results[7], gallery = results[8];
       renderStats(cfg.stats);
       renderServices(services.items);
       renderFaq(faq.items);
@@ -458,6 +578,7 @@
       renderClients(clients.items);
       renderTestimonials(testis.items);
       renderQuemCarousel(segments.items);
+      renderGallery(gallery.items);
       applySiteConfig(cfg);
       observeReveal(document);
       observeCounters(document);

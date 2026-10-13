@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=7">
+<link rel="stylesheet" href="css/style.css?v=8">
 
 <script type="application/ld+json">
 {
@@ -130,6 +130,16 @@
   <div class="quem-extra reveal">
     <h3>Excelência técnica e atendimento consultivo</h3>
     <p class="lead">Realizamos análises físico-químicas e microbiológicas através de métodos reconhecidos nacional e internacionalmente. Sabemos que o mercado exige agilidade e precisão, por isso vamos além: entregamos não apenas laudos, mas também consultoria e parecer técnico, sempre com um atendimento próximo, ágil e pautado pelo sigilo.</p>
+  </div>
+  <div class="gallery-block reveal" id="galleryBlock" hidden>
+    <h3 class="gallery-title">Conheça toda a estrutura da Bcontrol</h3>
+    <p class="gallery-sub">(Clique na imagem ou vídeo para ampliar)</p>
+    <div class="gallery-wrap">
+      <button class="gnav prev" data-g="galleryTrack" aria-label="Anterior">‹</button>
+      <div class="gallery-track" id="galleryTrack"></div>
+      <button class="gnav next" data-g="galleryTrack" aria-label="Próximo">›</button>
+    </div>
+    <div class="gallery-dots" id="galleryDots"></div>
   </div>
 </div></section>
 
@@ -298,6 +308,11 @@
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/main.js?v=8"></script>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visualização ampliada">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">&times;</button>
+  <div class="lightbox-inner" id="lightboxInner"></div>
+</div>
+
+<script src="js/main.js?v=9"></script>
 </body>
 </html>

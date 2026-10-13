@@ -181,12 +181,20 @@ function build_field_value(array $field, $postValue, $filesValue) {
   $type = $field['type'];
   switch ($type) {
     case 'string':
+    case 'select':
       return trim((string)(is_array($postValue) ? '' : ($postValue ?? '')));
     case 'number':
       $v = is_array($postValue) ? '' : ($postValue ?? '');
       return is_numeric($v) ? $v + 0 : 0;
     case 'textarea':
       return (string)(is_array($postValue) ? '' : ($postValue ?? ''));
+    case 'youtube':
+      $raw = trim((string)(is_array($postValue) ? '' : ($postValue ?? '')));
+      if ($raw === '') return '';
+      if (preg_match('#(?:youtu\.be/|youtube\.com/(?:watch\?v=|embed/|shorts/))([a-zA-Z0-9_-]{6,})#', $raw, $m)) {
+        return $m[1];
+      }
+      return $raw;
     case 'file':
       $destRelative = null;
       if (is_array($filesValue) && !empty($filesValue['name'])) {
@@ -289,6 +297,15 @@ function render_field(array $field, $value, string $dataPath, string $uploadPath
       return '<div class="field">' . $label . render_text_input($name, $value, 'number') . $hint . '</div>';
     case 'textarea':
       return '<div class="field">' . $label . '<textarea name="' . h($name) . '" rows="4">' . h((string)$value) . '</textarea>' . $hint . '</div>';
+    case 'select':
+      $opts = '';
+      foreach ($field['options'] as $opt) {
+        $sel = ((string)$value === (string)$opt['value']) ? ' selected' : '';
+        $opts .= '<option value="' . h($opt['value']) . '"' . $sel . '>' . h($opt['label']) . '</option>';
+      }
+      return '<div class="field">' . $label . '<select name="' . h($name) . '">' . $opts . '</select>' . $hint . '</div>';
+    case 'youtube':
+      return '<div class="field">' . $label . render_text_input($name, $value) . $hint . '</div>';
     case 'file':
       $uploadName = $uploadPath . '[' . $field['name'] . ']';
       return '<div class="field">' . $label
