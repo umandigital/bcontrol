@@ -258,8 +258,8 @@ início como a pendência nº 1. Decisão tomada: construir um painel próprio e
 totalidade delas), sem precisar de Node, build ou serviço externo.
 
 **O que o painel faz:**
-- Login com senha única (protegido por sessão + proteção simples contra força bruta) e
-  opção de trocar a própria senha pelo painel, em "Alterar senha".
+- Login por **e-mail + senha** (multiusuário — ver Rodada 9), protegido por sessão e
+  proteção simples contra força bruta.
 - Um formulário por tipo de conteúdo (Configurações gerais, FAQ, Serviços, Equipe,
   Depoimentos, Clientes, Segmentos, Documentos), com campos organizados (não é preciso
   editar JSON manualmente), incluindo listas que podem ganhar ou perder itens
@@ -276,8 +276,24 @@ totalidade delas), sem precisar de Node, build ou serviço externo.
 e o script do Netlify Identity que estava em `index.html` — todos dependiam do cenário
 Netlify, que não se aplica a esta hospedagem.
 
-**Antes de publicar, troque a senha padrão do painel** (vem configurada com uma senha
-temporária só para o primeiro acesso) em `/admin` → "Alterar senha".
+## Rodada 9 — painel passou a ser multiusuário (e-mail + senha)
+
+A pedido, o painel deixou de ter uma senha única compartilhada e passou a ter **contas
+individuais** (e-mail + senha), guardadas em `admin/users.json` (bloqueado para acesso
+externo, igual ao antigo `auth_data.json`, que foi removido):
+
+- O primeiro acesso já vem configurado para `luciano@umandigital.com.br`, com a senha
+  combinada diretamente (não registrada em texto neste relatório, só o hash fica salvo
+  no servidor).
+- Depois de logado, qualquer usuário pode criar outros em `/admin` → **"Usuários"** — todos
+  com os mesmos poderes (editar qualquer conteúdo e criar/remover outros usuários), sem
+  distinção de papel/cargo.
+- Não é possível remover o próprio usuário logado nem o último usuário restante (trava de
+  segurança para nunca ficar sem acesso nenhum ao painel).
+- Cada usuário troca a própria senha em "Alterar senha" (exige a senha atual).
+- Testado localmente: login com o usuário inicial, criação de usuário novo + login com
+  ele, remoção de usuário, proteção contra remover o último/o próprio usuário logado, e
+  troca de senha — tudo funcionando.
 
 ## Rodada 8 — formulário de orçamento passou a usar envio próprio (`envio.php`)
 
@@ -316,7 +332,8 @@ site com `testCcEmail` preenchido para confirmar a entrega antes de liberar de v
 
 ## Checklist final antes de publicar em produção
 
-- [ ] Trocar a senha padrão do painel `/admin` (ver Rodada 7).
+- [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
+      (ver Rodada 9), em vez de todo mundo usar a mesma conta.
 - [ ] Conferir em `envio.php` se `FROM_EMAIL` é um endereço real do domínio final (ver
       Rodada 8) e mandar um pedido de teste pelo formulário antes de liberar de vez.
 - [ ] Decidir se `content/site.json` → `testCcEmail` continua apontando para o e-mail de

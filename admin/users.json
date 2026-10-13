@@ -1,0 +1,9 @@
+{
+    "users": [
+        {
+            "email": "luciano@umandigital.com.br",
+            "password_hash": "$2y$12$\/XBcZGeTYFZsSVCNqumzIu21camrZ7tJK4R37Q1KMha51W89yvBPy",
+            "created_at": "2026-10-13T00:00:00+00:00"
+        }
+    ]
+}

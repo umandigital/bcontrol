@@ -27,22 +27,23 @@ o dono do próprio site). Se o painel der erro de "não foi possível gravar" ao
 peça para o suporte da hospedagem ajustar a permissão dessas 3 pastas para **755** (ou,
 em último caso, **775**).
 
-## 3. Acessar o painel de edição e trocar a senha
+## 3. Acessar o painel de edição
 
 1. Acesse `https://SEUDOMINIO/admin` (troque pelo domínio real).
-2. **Senha inicial:** `bcontrol2026`
-3. **Troque essa senha imediatamente** em "Alterar senha" (menu no topo do painel).
-4. A partir daí, qualquer pessoa autorizada pode editar FAQ, serviços, equipe,
-   depoimentos, clientes, segmentos, documentos (incluindo subir PDF novo) e as
-   configurações gerais do site (e-mails por setor, WhatsApp, redes sociais etc.) direto
-   pelo navegador, sem mexer em código.
+2. Faça login com e-mail + senha (a primeira conta já vem configurada).
+3. Em **"Usuários"** (menu no topo), crie uma conta própria para cada pessoa que for
+   mexer no painel — todas as contas têm os mesmos poderes, não existe "cargo" diferente.
+4. Qualquer pessoa logada pode editar FAQ, serviços, equipe, depoimentos, clientes,
+   segmentos, documentos (incluindo subir PDF novo) e as configurações gerais do site
+   (e-mails por setor, WhatsApp, redes sociais etc.) direto pelo navegador, sem mexer em
+   código.
 
 ## 4. Antes de considerar "no ar de vez"
 
 Veja a lista completa em `RELATORIO.md` → seção **"Checklist final antes de publicar em
 produção"**. Os pontos principais:
 
-- Trocar a senha padrão do painel (item 3 acima).
+- Criar uma conta própria por pessoa no painel (item 3 acima), em vez de dividir a mesma.
 - Abrir `envio.php` e conferir se `FROM_EMAIL` é um endereço real do domínio final (ajuda
   a não cair em spam), depois mandar um pedido de teste pelo próprio formulário do site.
 - Decidir se o e-mail de teste do formulário de orçamento (`testCcEmail`, em
@@ -63,9 +64,12 @@ produção"**. Os pontos principais:
   acontecer — se acontecer, confirme que o `.htaccess` foi enviado junto (ele é um arquivo
   "escondido", começa com ponto; ative "Mostrar arquivos ocultos" no Gerenciador de
   Arquivos para conferir).
-- **"Esqueci a senha do painel."** Peça para alguém com acesso ao Gerenciador de Arquivos
-  apagar o arquivo `admin/auth_data.json` — o painel volta a aceitar a senha inicial
-  `bcontrol2026` (troque de novo em seguida).
+- **"Esqueci minha senha e não tenho outra conta no painel para trocar por mim."** Peça
+  para alguém com acesso ao Gerenciador de Arquivos apagar o arquivo `admin/users.json` —
+  o painel recria o primeiro acesso do zero (e-mail `luciano@umandigital.com.br`, senha
+  `bcontrol2026`); entre, troque a senha em "Alterar senha" e recrie as demais contas em
+  "Usuários". Se você tem outra conta ativa no painel, é mais simples só pedir pra ela
+  entrar em "Usuários" e remover/recriar a sua.
 - **"O formulário de orçamento não chega por e-mail."** O envio usa a função `mail()`
   nativa do PHP (`envio.php`), que funciona por padrão em praticamente toda hospedagem
   cPanel. Se mesmo assim não chegar: confirme com o suporte da hospedagem que a função

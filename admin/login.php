@@ -14,17 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (!admin_csrf_check()) {
     $error = 'Sessão expirada, tente novamente.';
   } else {
-    $auth = admin_load_auth();
+    $users = admin_load_users();
+    $email = (string)($_POST['email'] ?? '');
     $password = (string)($_POST['password'] ?? '');
-    if (password_verify($password, $auth['password_hash'])) {
+    $user = admin_find_user($users, $email);
+    if ($user && password_verify($password, $user['password_hash'])) {
       admin_login_reset_fails();
       session_regenerate_id(true);
-      $_SESSION['admin_ok'] = true;
+      $_SESSION['admin_email'] = $user['email'];
       header('Location: index.php');
       exit;
     } else {
       admin_login_register_fail();
-      $error = 'Senha incorreta.';
+      $error = 'E-mail ou senha incorretos.';
     }
   }
 }
@@ -44,8 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <p class="muted">bcontrol — acesso restrito</p>
     <?php if ($error): ?><div class="alert error"><?= h($error) ?></div><?php endif; ?>
     <?= admin_csrf_field() ?>
+    <label for="email">E-mail</label>
+    <input type="email" id="email" name="email" required autofocus>
     <label for="password">Senha</label>
-    <input type="password" id="password" name="password" required autofocus>
+    <input type="password" id="password" name="password" required>
     <button class="btn" type="submit">Entrar</button>
   </form>
 </body>

@@ -22,11 +22,11 @@
 
 ErrorDocument 404 /404.html
 
-# Bloqueia acesso direto via navegador ao arquivo com o hash da senha do painel
+# Bloqueia acesso direto via navegador aos arquivos com os hashes de senha do painel
 # e às cópias de segurança automáticas do conteúdo (content/.backups/).
-<Files "auth_data.json">
+<FilesMatch "^(auth_data|users)\.json$">
   Require all denied
-</Files>
+</FilesMatch>
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^content/\.backups/ - [F,L]

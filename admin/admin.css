@@ -38,6 +38,10 @@ fieldset > label{font-size:14px;margin-bottom:10px}
 .alert{padding:12px 14px;border-radius:8px;margin-bottom:16px;font-size:14px}
 .alert.error{background:#fdecec;color:#9c2a2a;border:1px solid #f3c4c4}
 .alert.success{background:#e9f7ef;color:#1d6b3a;border:1px solid #bfe6cd}
+.user-table{width:100%;border-collapse:collapse;font-size:14px}
+.user-table th{text-align:left;font-size:12px;text-transform:uppercase;color:#6b7d78;padding:6px 10px;border-bottom:1px solid var(--line)}
+.user-table td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.user-table tr:last-child td{border-bottom:none}
 .login-page{display:flex;align-items:center;justify-content:center;min-height:100vh}
 .login-box{width:320px;text-align:left}
 .login-box h1{font-size:20px;margin-bottom:2px}
