@@ -90,7 +90,15 @@ nav.menu a.active{color:var(--orange);border-bottom-color:var(--orange)}
 .hero p{color:#dcefea;font-size:clamp(16px,1.6vw,20px);max-width:46ch;margin:18px 0 26px}
 .wave{position:absolute;left:0;right:0;bottom:-1px;z-index:2;line-height:0}
 .wave svg{width:100%;height:90px;display:block}
-@media(max-width:640px){.hero{min-height:78vh}.hero .wrap{padding-bottom:120px}}
+@media(max-width:640px){
+  .hero{min-height:78vh}
+  .hero .wrap{padding-bottom:120px}
+  /* o vídeo/poster são enquadrados em paisagem (16:9); num recorte estreito e alto de
+     celular, "object-position" central corta fora o elemento principal da cena (o
+     gotejador), deixando só o fundo desfocado visível — por isso "parecia" que o vídeo
+     não aparecia. Desloca o enquadramento pra mostrar o gotejador também no mobile. */
+  .hero video,.hero .heroposter{object-position:78% center}
+}
 
 /* ===== NÚMEROS (glass) ===== */
 .nums{position:relative;z-index:5;margin-top:-90px}
@@ -210,7 +218,14 @@ nav.menu a.active{color:var(--orange);border-bottom-color:var(--orange)}
 .card-img figcaption span{display:block;font-weight:500;color:var(--muted);font-size:12.5px;margin-top:2px}
 .equipe .track{justify-content:center;gap:24px}
 .equipe .card-img{width:min(30%,280px)}
-@media(max-width:640px){.equipe .card-img,.card-img{width:78vw}}
+@media(max-width:640px){
+  .equipe .card-img,.card-img{width:78vw}
+  /* com overflow (mobile), "justify-content:center" deixa o 1º card inacessível (o
+     scroll trava em 0 sem nunca chegar nele) — um bug conhecido de flexbox com
+     conteúdo centralizado maior que o container. Em telas largas (sem overflow) o
+     "center" acima continua valendo e os 3 cards ficam centralizados normalmente. */
+  .equipe .track{justify-content:flex-start}
+}
 .snav{position:absolute;top:44%;width:46px;height:46px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 24px -12px rgba(0,0,0,.3);z-index:3;color:var(--teal-d);font-size:20px}
 .snav.prev{left:-6px}.snav.next{right:-6px}
 .snav:hover{background:var(--teal);color:#fff}

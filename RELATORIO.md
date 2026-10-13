@@ -514,6 +514,48 @@ e sem alteração no checklist abaixo — Instagram, revisão jurídica das pág
 depoimentos/números reais (se os atuais ainda não forem definitivos), e confirmar o
 domínio final.
 
+## Rodada 18 — 3 bugs reportados no mobile
+
+Três problemas relatados depois de testar no celular, todos investigados e confirmados
+como bugs reais (não só "impressão"), com causa raiz identificada antes de corrigir:
+
+- **Vídeo "não aparecia" no mobile.** Causa: por economia de dados móveis, o vídeo do
+  topo (`hero.mp4`/`.webm`, ~10MB) nunca é tocado no celular — isso é de propósito (o
+  próprio código já tinha esse comentário), e em vez do vídeo é mostrada uma imagem
+  estática (`assets/hero_fundo.png/webp`) no lugar. O problema real: essa imagem estática
+  era só uma textura abstrata de "bolhas" desfocadas, sem o gotejador (o elemento visual
+  principal da marca) — por isso parecia que "não tinha nada ali", mesmo a imagem
+  carregando certinho. **Corrigido**: a imagem estática foi trocada por um frame real
+  extraído do próprio vídeo (o gotejador bem nítido), então agora o celular mostra o
+  gotejador parado como pano de fundo do topo, em vez de uma textura genérica — sem
+  gastar os 10MB do vídeo. Mantido o enquadramento (`object-position`) ajustado para a
+  faixa mobile, que já tinha sido corrigido numa rodada anterior para não cortar o
+  gotejador fora da tela.
+- **Cor de fundo do botão "Pesquisa de satisfação" com problema.** Conferido pelo
+  navegador (inspecionando o CSS calculado) que a regra de cor está correta
+  (`var(--teal)`, a mesma cor verde-azulada usada em outros botões do site) — não é um
+  erro no código do botão em si. A explicação mais provável é o recurso "Forçar tema
+  escuro" do Chrome para Android (ativado por padrão em muitos aparelhos), que recolore
+  páginas que não avisam explicitamente que são um site "claro". Adicionada a tag
+  `<meta name="color-scheme" content="light">` nas 4 páginas do site — é a forma padrão
+  de dizer ao navegador "não recolorir isso", e resolve esse tipo de caso.
+- **Faltava uma profissional no carrossel da Equipe.** Confirmado que as 3 profissionais
+  estão certinhas no arquivo de conteúdo (`content/team.json`) — não é perda de dado.
+  O bug real: no mobile, o primeiro card (Fabíola) estava **impossível de alcançar** por
+  scroll — não só "difícil", testado diretamente no navegador e o carrossel não se movia
+  nem um pixel para trás do segundo card. Causa: a regra de CSS que centralizava os
+  cards (`justify-content:center`) empurrava o primeiro card para antes do ponto onde o
+  navegador consegue rolar (não existe "scroll negativo"), uma particularidade conhecida
+  de contêineres flexbox com scroll e conteúdo maior que a tela. Corrigido para alinhar
+  à esquerda só na faixa mobile, e testado clicando em cada bolinha indicadora: as 3
+  profissionais agora aparecem, nessa ordem — Fabíola, Vanessa, Daniela.
+
+**Testado**: as 3 correções verificadas com teste automatizado (Playwright, 390px de
+largura) — carrossel de equipe percorrendo as 3 bolinhas sem travar, imagem nova do topo
+carregando e mostrando o gotejador, meta tag de `color-scheme` presente nas 4 páginas.
+CSS cacheado atualizado de `?v=10` para `?v=11` nas 4 páginas, para o visitante não ficar
+com a versão antiga guardada no navegador.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
