@@ -430,10 +430,12 @@ A pedido, o e-mail que cada setor recebe agora tem um assunto próprio (antes er
 
 | Setor | Assunto do e-mail |
 |---|---|
-| Águas | bcontrol - Dúvidas/Sugestões |
-| Alimentos | bcontrol - Dúvidas/Sugestões |
-| Controle de qualidade | bcontrol - Controle de Qualidade |
-| Comercial | bcontrol - Pedido de Orçamento |
+| Águas | Dúvidas/Sugestões |
+| Alimentos | Dúvidas/Sugestões |
+| Controle de qualidade | Controle de Qualidade |
+| Comercial | Pedido de Orçamento |
+
+(prefixo "bcontrol - " testado inicialmente e removido a pedido do cliente)
 
 Novo campo `content/site.json` → `sectorSubjects` (mesmo formato de `sectorEmails`),
 editável também pelo `/admin` → "Configurações gerais". `envio.php` usa esse assunto na

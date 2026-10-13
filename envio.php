@@ -66,7 +66,7 @@ if (!filter_var($targetEmail, FILTER_VALIDATE_EMAIL)) {
 
 $sectorSubjects = $siteConfig['sectorSubjects'] ?? [];
 $subjectLabel = $sectorSubjects[$setor] ?? $setor;
-$subject = '=?UTF-8?B?' . base64_encode('bcontrol - ' . $subjectLabel) . '?=';
+$subject = '=?UTF-8?B?' . base64_encode($subjectLabel) . '?=';
 
 $body = "Novo pedido de orçamento pelo site da bcontrol\n\n"
   . "Setor: {$setor}\n"
