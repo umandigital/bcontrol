@@ -21,3 +21,13 @@
 </IfModule>
 
 ErrorDocument 404 /404.html
+
+# Bloqueia acesso direto via navegador ao arquivo com o hash da senha do painel
+# e às cópias de segurança automáticas do conteúdo (content/.backups/).
+<Files "auth_data.json">
+  Require all denied
+</Files>
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^content/\.backups/ - [F,L]
+</IfModule>

@@ -12,13 +12,13 @@ privacidade.html       Política de Privacidade (LGPD) — modelo, pendente revi
 termos.html             Termos de Uso — modelo, pendente revisão jurídica
 404.html                 página de erro 404
 robots.txt, sitemap.xml  SEO técnico
-netlify.toml             config. de deploy (caso a hospedagem final seja Netlify)
 css/style.css             todo o CSS (antes embutido no HTML)
 js/main.js                todo o JS (antes embutido no HTML) — carrega o conteúdo dos JSON,
                            acessibilidade, formulários, LGPD, analytics, parallax etc.
 content/*.json            conteúdo editável (FAQ, serviços, equipe, clientes, depoimentos,
                            documentos, configurações gerais) — ver seção CMS abaixo
-admin/                     painel de edição (Decap CMS) para o cenário Netlify/Cloudflare
+admin/                     painel de edição próprio (PHP, sem dependências), em /admin —
+                           ver seção "CMS / edição de conteúdo" abaixo
 assets/                    imagens (.webp otimizado + .png de fallback) e favicons
 ```
 
@@ -83,30 +83,27 @@ assets/                    imagens (.webp otimizado + .png de fallback) e favico
 - Conteúdo (FAQ, serviços, equipe, clientes, depoimentos, documentos, configurações
   gerais) foi extraído para `content/*.json` e a página carrega tudo dinamicamente — ou
   seja, **dá para editar sem mexer no HTML**.
-- Painel `/admin` (Decap CMS) já configurado em `admin/config.yml` apontando para esses
-  arquivos, pronto para o cenário recomendado (Netlify/Cloudflare Pages + Git Gateway).
-  Ainda depende da decisão de hospedagem para ser ativado (ver pendência 1 abaixo).
+- **Painel `/admin` funcional, pronto para a hospedagem cPanel** (ver Rodada 7 abaixo) —
+  substituiu o painel baseado em Decap CMS/Netlify cogitado antes, que dependia de um tipo
+  de hospedagem que não é o deste projeto.
 
 ## Pendências que só o cliente pode resolver
 
 Estas dependem de informação/decisão do cliente e não foram assumidas (conforme o
 briefing) — o site já está preparado para recebê-las assim que chegarem, bastando editar
-`content/site.json` (ou o `/admin`, quando ativo):
+`content/site.json` (ou o `/admin`):
 
-1. **Hospedagem final** — cPanel/FTP ou Netlify/Cloudflare Pages? Define se o `/admin`
-   (Decap CMS) pode ser ativado como está, ou se precisamos de uma alternativa de painel
-   próprio para JSON (cenário cPanel).
+1. ~~**Hospedagem final**~~ — **resolvido**: cPanel. O painel `/admin` já foi construído
+   especificamente para esse cenário (PHP puro, sem Netlify/build) — ver Rodada 7.
 2. **Domínio e HTTPS** — para atualizar `canonical`, Open Graph, `sitemap.xml`, `robots.txt`.
 3. **E-mails por setor "Águas" e "Alimentos"** — hoje apontam para `bcontrol@bcontrol.com.br`
    (Atendimento Geral, e-mail real já usado no site atual) por não haver um endereço
    dedicado a esses dois setores nem no site nem no material recebido. "Controle de
    qualidade" e "Comercial" já usam e-mails reais e específicos (ver Rodada 3 abaixo).
    Se quiser endereços próprios para Águas/Alimentos, é só avisar.
-4. **Confirmar recebimento do formulário de orçamento**: o endpoint (formsubmit.co) está
-   configurado, mas a primeira mensagem real enviada pelo site vai disparar um e-mail de
-   confirmação para `bcontrol@bcontrol.com.br` — **alguém precisa clicar no link desse
-   e-mail** para o formulário passar a funcionar de verdade (é assim que o formsubmit.co
-   evita spam; não precisa criar conta, é só esse clique único).
+4. ~~**Confirmar recebimento do formulário de orçamento**~~ — **resolvido**: endpoint
+   (formsubmit.co) ativado e testado, e-mail de confirmação recebido. **Antes de publicar
+   em definitivo**, ver o item "e-mail de teste" no checklist final (Rodada 7).
 5. **Depoimentos reais** (texto + nome + empresa autorizados) — `content/testimonials.json`.
 6. **Números reais** (parâmetros no escopo) — `content/site.json` → `stats`.
 7. **GA4** (Measurement ID) e eventual pixel de campanha — não existia no site atual;
@@ -122,13 +119,22 @@ o visitante (ex.: "aguardando configuração") em vez de fingir uma ação que n
 
 ## Como editar o conteúdo (para o cliente)
 
-**Sem CMS ativo ainda:** qualquer um dos arquivos em `content/*.json` pode ser editado
-diretamente (é texto simples) e publicado — FAQ, serviços, equipe, clientes, depoimentos,
-documentos e as configurações gerais (e-mails, WhatsApp, portal, GA4 etc.).
+**Painel `/admin` (recomendado):** acesse `https://SEUDOMINIO/admin` e faça login com a
+senha do painel (ver Rodada 7 — **troque a senha padrão assim que publicar**, pelo próprio
+painel em "Alterar senha"). Dá para editar FAQ, serviços, equipe, clientes, depoimentos,
+documentos (inclusive subir um PDF novo direto pelo navegador) e as configurações gerais
+(e-mails por setor, WhatsApp, redes sociais, números, GA4) sem tocar em código. Cada vez
+que algo é salvo, a versão anterior do arquivo fica guardada automaticamente em
+`content/.backups/` (não acessível pelo navegador), como uma rede de segurança.
 
-**Com o CMS ativo (`/admin`, após a hospedagem ser definida):** um painel visual permite
-editar os mesmos itens sem tocar em código, com convite de usuário controlado pelo
-próprio cliente.
+**Direto no arquivo (alternativa):** qualquer um dos arquivos em `content/*.json` também
+pode ser editado diretamente (é texto simples) e publicado por FTP/File Manager — útil
+para quem já tem prática com isso.
+
+**Trocar fotos/logos:** o painel edita texto e o PDF de documentos, mas a troca de fotos
+(equipe, segmentos, clientes, serviços) continua sendo por FTP/File Manager, mantendo o
+mesmo nome de arquivo — porque essas imagens passam por um preparo prévio (redimensionar e
+gerar a versão `.webp` leve) que não dá para fazer com segurança só pelo navegador.
 
 **Cache do navegador ao trocar `assets/*`, `css/style.css` ou `js/main.js`:** esses
 arquivos são referenciados com `?v=N` (ex.: `logo.png?v=4`) — é assim que o navegador sabe
@@ -242,6 +248,53 @@ layout compacto anterior (duas colunas, texto curto + foto). Reestruturado assim
   com os três em cartões lado a lado (empilham no mobile). Os textos de Missão e Visão
   batem com o que já existia no site atual da bcontrol, então é conteúdo real e
   consistente, não inventado.
+
+## Rodada 7 — painel de edição próprio para cPanel + empacotamento final
+
+Com a hospedagem confirmada como cPanel (sem Netlify/build), o painel que estava pensado
+para Decap CMS + Git Gateway não funcionaria — essa dependência está documentada desde o
+início como a pendência nº 1. Decisão tomada: construir um painel próprio em PHP puro
+(`admin/`), que funciona em qualquer hospedagem cPanel/Apache com PHP (a praticamente
+totalidade delas), sem precisar de Node, build ou serviço externo.
+
+**O que o painel faz:**
+- Login com senha única (protegido por sessão + proteção simples contra força bruta) e
+  opção de trocar a própria senha pelo painel, em "Alterar senha".
+- Um formulário por tipo de conteúdo (Configurações gerais, FAQ, Serviços, Equipe,
+  Depoimentos, Clientes, Segmentos, Documentos), com campos organizados (não é preciso
+  editar JSON manualmente), incluindo listas que podem ganhar ou perder itens
+  ("+ Adicionar item" / "Remover") direto na página.
+- Upload de PDF novo para a seção "Documentos & certificações" direto pelo navegador.
+- Backup automático: antes de qualquer gravação, a versão anterior do arquivo é copiada
+  para `content/.backups/` (pasta bloqueada para acesso externo via `.htaccess`).
+- Testado localmente (PHP 8.4) ponta a ponta: login, senha incorreta, proteção CSRF,
+  edição simples (FAQ), edição com listas aninhadas (Serviços — itens + chips), upload de
+  PDF (Documentos) e troca de senha — todos funcionando e o conteúdo final conferido
+  byte a byte contra o original (sem perda de dados).
+
+**O que foi removido:** `admin/config.yml` e `admin/index.html` (Decap CMS), `netlify.toml`
+e o script do Netlify Identity que estava em `index.html` — todos dependiam do cenário
+Netlify, que não se aplica a esta hospedagem.
+
+**Antes de publicar, troque a senha padrão do painel** (vem configurada com uma senha
+temporária só para o primeiro acesso) em `/admin` → "Alterar senha".
+
+## Checklist final antes de publicar em produção
+
+- [ ] Trocar a senha padrão do painel `/admin` (ver Rodada 7).
+- [ ] Decidir se `content/site.json` → `testCcEmail` continua apontando para o e-mail de
+      teste ou se já pode ser esvaziado, para que os orçamentos cheguem direto aos e-mails
+      reais por setor (ele foi usado só para validar o envio sem acesso às caixas de
+      entrada da bcontrol — ver Rodada 3/pendência 4, já confirmado funcionando).
+- [ ] Preencher `content/site.json` → `socials.instagram` (ainda não informado).
+- [ ] Preencher `content/site.json` → `ga4Id`, se for usar Google Analytics 4.
+- [ ] Revisão jurídica de `privacidade.html` e `termos.html` (conteúdo modelo).
+- [ ] Depoimentos reais e números reais (`content/testimonials.json`, `content/site.json`
+      → `stats`), quando disponíveis.
+- [ ] Confirmar domínio/HTTPS final para atualizar `canonical`, Open Graph, `sitemap.xml`
+      e `robots.txt` (hoje apontam para `www.bcontrol.com.br`, usados como referência).
+- [ ] Upload de todos os arquivos do zip para a raiz pública do domínio final (ver
+      `INSTRUCOES_PUBLICACAO.md` incluso no pacote).
 
 ## Ainda no checklist do briefing (próximos passos, após as pendências acima)
 
