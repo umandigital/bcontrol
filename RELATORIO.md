@@ -613,6 +613,36 @@ mudanças, com servidor PHP local — login legítimo continua funcionando norma
 por tentativas erradas confirmado funcionando mesmo trocando de cookie, nenhuma
 regressão nas outras páginas do painel.
 
+## Rodada 20 — achado importante: zip de atualização apagando conteúdo do admin
+
+Foto/depoimento inserido pelo `/admin` no ambiente de teste
+(`umandigital.com.br/bcontrol_sitev2`) sumiu depois de uma atualização. Causa raiz
+confirmada: **os arquivos `content/*.json` fazem parte do repositório** (é assim que a
+primeira publicação já vai com o conteúdo inicial pronto). Isso significa que todo zip
+"site completo" gerado a partir do repositório — como os que mandei nas Rodadas 18 e 19
+— carrega a versão **original** desses arquivos, não o que foi editado depois ao vivo
+pelo painel. Quando esse zip é reenviado por cima do site, ele sobrescreve exatamente
+os arquivos que o `/admin` tinha acabado de atualizar, revertendo para o conteúdo de
+exemplo — sem aviso nenhum, porque do ponto de vista do zip é só "o site completo de
+novo".
+
+**Infelizmente não tem como recuperar automaticamente** o que foi perdido: o sistema de
+backup do próprio painel (`content/.backups/`) só guarda a versão de **antes** de cada
+salvamento feito pelo `/admin` — e a sobrescrita por zip não passa pelo `/admin`, então
+não gerou backup nenhum do que foi perdido. Se quem editou ainda tiver as fotos/textos
+originais à mão, só editar de novo.
+
+**Corrigido o processo daqui pra frente**: qualquer atualização futura de código (bug
+fix, ajuste de CSS, etc.) enviada para um ambiente onde o `/admin` já estiver em uso
+**não deve incluir `content/*.json`** — só o primeiro deploy de um domínio novo (onde
+ainda não existe conteúdo editado) deve levar esses arquivos. Daqui pra frente vou
+gerar dois tipos de pacote:
+- **Pacote de primeira publicação** (um domínio que nunca recebeu o site): inclui tudo,
+  `content/*.json` incluso, porque é o ponto de partida.
+- **Pacote de atualização** (um domínio que já está no ar e já tem conteúdo editado via
+  `/admin`): todo o código (HTML/CSS/JS/admin), **sem** `content/*.json` — assim o
+  conteúdo já inserido nunca é tocado.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
