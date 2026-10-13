@@ -25,6 +25,12 @@ return [
         ['name' => 'Controle de qualidade', 'label' => 'Controle de qualidade', 'type' => 'string'],
         ['name' => 'Comercial', 'label' => 'Comercial', 'type' => 'string'],
       ]],
+      ['name' => 'sectorSubjects', 'label' => 'Assunto do e-mail por setor', 'type' => 'object', 'fields' => [
+        ['name' => 'Águas', 'label' => 'Águas', 'type' => 'string'],
+        ['name' => 'Alimentos', 'label' => 'Alimentos', 'type' => 'string'],
+        ['name' => 'Controle de qualidade', 'label' => 'Controle de qualidade', 'type' => 'string'],
+        ['name' => 'Comercial', 'label' => 'Comercial', 'type' => 'string'],
+      ]],
       ['name' => 'socials', 'label' => 'Redes sociais', 'type' => 'object', 'fields' => [
         ['name' => 'instagram', 'label' => 'Instagram (URL)', 'type' => 'string'],
         ['name' => 'facebook', 'label' => 'Facebook (URL)', 'type' => 'string'],

@@ -64,7 +64,9 @@ if (!filter_var($targetEmail, FILTER_VALIDATE_EMAIL)) {
   respond(500, ['ok' => false, 'error' => 'Destinatário mal configurado. Avise o suporte técnico.']);
 }
 
-$subject = '=?UTF-8?B?' . base64_encode('Novo pedido de orçamento — bcontrol (' . $setor . ')') . '?=';
+$sectorSubjects = $siteConfig['sectorSubjects'] ?? [];
+$subjectLabel = $sectorSubjects[$setor] ?? $setor;
+$subject = '=?UTF-8?B?' . base64_encode('bcontrol - ' . $subjectLabel) . '?=';
 
 $body = "Novo pedido de orçamento pelo site da bcontrol\n\n"
   . "Setor: {$setor}\n"

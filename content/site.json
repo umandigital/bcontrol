@@ -12,6 +12,12 @@
     "Controle de qualidade": "daniela@bcontrol.com.br",
     "Comercial": "comercial@bcontrol.com.br"
   },
+  "sectorSubjects": {
+    "Águas": "Dúvidas/Sugestões",
+    "Alimentos": "Dúvidas/Sugestões",
+    "Controle de qualidade": "Controle de Qualidade",
+    "Comercial": "Pedido de Orçamento"
+  },
   "socials": {
     "instagram": "TODO-URL-INSTAGRAM",
     "facebook": "https://www.facebook.com/biocontrolrs/"

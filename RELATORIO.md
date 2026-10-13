@@ -423,6 +423,23 @@ site com `testCcEmail` preenchido para confirmar a entrega antes de liberar de v
   cookies, requisito de LGPD) — confirmado localmente que o script do GA4 é injetado com
   o ID correto assim que o consentimento é dado.
 
+## Rodada 15 — assunto do e-mail diferente por setor
+
+A pedido, o e-mail que cada setor recebe agora tem um assunto próprio (antes era sempre
+"Novo pedido de orçamento — bcontrol (setor)"):
+
+| Setor | Assunto do e-mail |
+|---|---|
+| Águas | bcontrol - Dúvidas/Sugestões |
+| Alimentos | bcontrol - Dúvidas/Sugestões |
+| Controle de qualidade | bcontrol - Controle de Qualidade |
+| Comercial | bcontrol - Pedido de Orçamento |
+
+Novo campo `content/site.json` → `sectorSubjects` (mesmo formato de `sectorEmails`),
+editável também pelo `/admin` → "Configurações gerais". `envio.php` usa esse assunto na
+hora de montar o e-mail; se um setor não tiver assunto configurado, usa o nome do próprio
+setor como reserva.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
