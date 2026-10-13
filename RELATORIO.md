@@ -368,6 +368,14 @@ aplicar seu próprio `border-radius` + `box-shadow` por cima. Recortada a moldur
 original da imagem antes de redimensionar, mantendo só a foto real — agora só a sombra do
 CSS do site aparece.
 
+## Rodada 13 — ajustes finos na galeria (setas do modal + posição das setas do carrossel)
+
+- O modal (lightbox) ganhou **setas de navegação** (anterior/próximo) para passar entre
+  as fotos/vídeos sem precisar fechar e abrir de novo — também funciona pelas setas
+  `←`/`→` do teclado. Só aparecem quando há mais de um item.
+- As setas do **carrossel** da galeria estavam sobrepondo a primeira/última foto (ficavam
+  "em cima" da imagem). Reposicionadas para fora da área das fotos, com espaço próprio.
+
 ## Rodada 8 — formulário de orçamento passou a usar envio próprio (`envio.php`)
 
 O endpoint formsubmit.co (serviço gratuito de terceiro) funcionava, mas tinha três
