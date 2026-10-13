@@ -31,13 +31,19 @@
   // ---------- menu mobile ----------
   var burger = document.getElementById('burger');
   var menu = document.getElementById('menu');
+  var clientBar = document.querySelector('.client');
   if (burger && menu) {
     burger.addEventListener('click', function () {
       var open = menu.classList.toggle('open');
+      if (clientBar) clientBar.classList.toggle('open', open);
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
     document.querySelectorAll('#menu a').forEach(function (a) {
-      a.addEventListener('click', function () { menu.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); });
+      a.addEventListener('click', function () {
+        menu.classList.remove('open');
+        if (clientBar) clientBar.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
     });
   }
 
@@ -123,6 +129,49 @@
     document.querySelectorAll('.snav[data-t="' + trackId + '"]').forEach(function (n) {
       n.style.display = hasOverflow ? '' : 'none';
     });
+  }
+
+  /** Bolinhas indicadoras para os carrosséis de cartão (equipe/depoimentos) — mostram
+   *  que há mais itens pra ver quando as setas somem no mobile (sem isso, no celular
+   *  não tinha nenhuma pista visual de que dava pra arrastar pros lados). */
+  function wireTrackDots(trackId, dotsId) {
+    var track = document.getElementById(trackId);
+    var dotsWrap = document.getElementById(dotsId);
+    if (!track || !dotsWrap) return;
+    var cards = track.children;
+    var hasOverflow = track.scrollWidth > track.clientWidth + 4;
+    dotsWrap.classList.toggle('show', hasOverflow && cards.length > 1);
+    if (dotsWrap.dataset.wired === '1') { updateActiveDot(); return; }
+    if (!cards.length) return;
+
+    dotsWrap.innerHTML = '';
+    Array.prototype.forEach.call(cards, function (card, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'dot';
+      b.setAttribute('aria-label', 'Item ' + (i + 1));
+      b.addEventListener('click', function () {
+        track.scrollTo({ left: card.offsetLeft - (track.clientWidth - card.clientWidth) / 2, behavior: reduceMotion ? 'auto' : 'smooth' });
+      });
+      dotsWrap.appendChild(b);
+    });
+    dotsWrap.dataset.wired = '1';
+
+    function updateActiveDot() {
+      var center = track.scrollLeft + track.clientWidth / 2;
+      var closest = 0, closestDist = Infinity;
+      Array.prototype.forEach.call(cards, function (card, i) {
+        var cardCenter = card.offsetLeft + card.clientWidth / 2;
+        var dist = Math.abs(cardCenter - center);
+        if (dist < closestDist) { closestDist = dist; closest = i; }
+      });
+      Array.prototype.forEach.call(dotsWrap.children, function (b, i) { b.classList.toggle('on', i === closest); });
+    }
+    updateActiveDot();
+    track.addEventListener('scroll', function () {
+      clearTimeout(track._dt);
+      track._dt = setTimeout(updateActiveDot, 80);
+    }, { passive: true });
   }
 
   // ---------- galeria institucional (fotos e vídeos) + lightbox ----------
@@ -614,9 +663,13 @@
       wireSliders(document);
       updateSliderArrows('teamTrack');
       updateSliderArrows('testiTrack');
+      wireTrackDots('teamTrack', 'teamDots');
+      wireTrackDots('testiTrack', 'testiDots');
       addEventListener('resize', function () {
         updateSliderArrows('teamTrack');
         updateSliderArrows('testiTrack');
+        wireTrackDots('teamTrack', 'teamDots');
+        wireTrackDots('testiTrack', 'testiDots');
       });
     }).catch(function (err) {
       console.error('Erro ao carregar conteúdo dinâmico:', err);

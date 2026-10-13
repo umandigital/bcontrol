@@ -442,6 +442,39 @@ editável também pelo `/admin` → "Configurações gerais". `envio.php` usa es
 hora de montar o e-mail; se um setor não tiver assunto configurado, usa o nome do próprio
 setor como reserva.
 
+## Rodada 16 — revisão geral mobile
+
+A pedido, revisão completa da versão mobile do site (390px, 768px e 900px testados via
+Playwright/Chromium), com dois bugs reais encontrados e corrigidos no cabeçalho, o
+reposicionamento pedido do link de pesquisa de satisfação, e uma melhoria de usabilidade
+nos carrosséis:
+
+- **Cabeçalho mobile "mal organizado" (o problema relatado):** a barra utilitária ("Área
+  do cliente": login de resultados, atualizar cadastro, solicitar kit, solicitar
+  orçamento) ficava **sempre visível acima do logo**, empurrando a marca/menu pra baixo da
+  tela e quebrando em várias linhas numa bagunça de campos e botões antes mesmo do
+  visitante ver o site. Agora essa barra só aparece dentro da gaveta do menu (☰), junto
+  com os links de navegação — o cabeçalho fechado mostra só logo + ☰, enxuto.
+- **Bug real no menu aberto:** ao abrir o menu (☰), os links de navegação apareciam
+  encolhidos numa coluna à direita, sobrepondo o logo por baixo — causado por duas regras
+  de CSS do desktop (`flex:1` e um `margin:0 auto` de centralização) que não tinham sido
+  resetadas para o layout em coluna do mobile. Corrigido: o menu agora ocupa a largura
+  toda, abaixo do logo, sem sobreposição, em qualquer largura de tela (testado em 390px,
+  768px e 900px).
+- **"Pesquisa de satisfação"** saiu da lista de links "Institucional" no rodapé e virou um
+  botão de destaque (CTA) ao lado dos ícones de Instagram/Facebook, como pedido.
+- **Carrosséis de Equipe e Depoimentos**: no mobile, as setas de navegação somem (não há
+  espaço) e o "espiadela" do próximo card é bem sutil — sem nenhuma pista de que dava pra
+  arrastar pros lados. Adicionadas bolinhas indicadoras (reaproveitando uma classe
+  `.dots`/`.dot` que já existia pronta no CSS, mas nunca tinha sido usada em lugar
+  nenhum), que mostram quantos itens existem e em qual o visitante está, clicáveis para
+  navegar direto. Só aparecem no mobile e só quando há mais itens do que cabem na tela.
+
+**Testado**: nenhuma regressão no desktop (cabeçalho e rodapé conferidos em 1440px),
+sem scroll horizontal indevido na página (só os carrosséis, que são assim de propósito),
+menu mobile funcional em 390/768/900px, dots clicáveis sincronizando com a posição do
+scroll.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
