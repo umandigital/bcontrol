@@ -298,6 +298,9 @@ footer a:hover{color:#fff}
 .satisfacao-cta{display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:10px;background:var(--teal);color:#fff;font-size:13px;font-weight:800;white-space:nowrap;width:auto}
 .satisfacao-cta:hover{background:var(--teal-d)}
 .copy{border-top:1px solid #245149;margin-top:34px;padding-top:18px;font-size:12px;color:#7ba69b;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.uman-credit{display:inline-flex;align-items:center;gap:6px;color:#7ba69b;text-decoration:none}
+.uman-credit:hover{color:#a8d2c8}
+.uman-credit img{height:16px;width:auto;display:block}
 
 /* floats */
 .fab{position:fixed;right:22px;bottom:22px;z-index:80;background:#25D366;color:#fff;border-radius:50%;width:58px;height:58px;display:grid;place-items:center;box-shadow:0 12px 28px rgba(0,0,0,.25);cursor:pointer}

@@ -699,6 +699,18 @@ tinha visitado o site.
 antiga), nada disso é visível — o problema só afeta quem abriu o site antes e está
 revisitando o mesmo link.
 
+## Rodada 23 — logo da Uman no rodapé
+
+O texto "Feito por Uman" no rodapé virou um link clicável com o logo oficial da Uman
+(`assets/uman-logo.svg`, fornecido pelo cliente), apontando para
+`https://www.umandigital.com.br` — **assumi essa URL por ser a mesma usada no
+ambiente de teste do projeto; avisar se for outro endereço**. Testado em desktop e
+conferido que não corta nem quebra linha no rodapé.
+
+CSS de novo em `?v=13` (lição da Rodada 22 aplicada: toda edição em
+`css/style.css` sobe o número junto, nesta mesma rodada, sem esperar o usuário
+reportar que não viu a mudança).
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
