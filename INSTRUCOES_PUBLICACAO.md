@@ -43,8 +43,11 @@ Veja a lista completa em `RELATORIO.md` → seção **"Checklist final antes de 
 produção"**. Os pontos principais:
 
 - Trocar a senha padrão do painel (item 3 acima).
-- Decidir se o e-mail de teste do formulário de orçamento (`testCcEmail`) continua ativo
-  ou se já pode ser removido, para os orçamentos caírem direto nos e-mails reais por setor.
+- Abrir `envio.php` e conferir se `FROM_EMAIL` é um endereço real do domínio final (ajuda
+  a não cair em spam), depois mandar um pedido de teste pelo próprio formulário do site.
+- Decidir se o e-mail de teste do formulário de orçamento (`testCcEmail`, em
+  `content/site.json`) continua ativo ou se já pode ser removido, para os orçamentos
+  caírem direto nos e-mails reais por setor.
 - Checar se o domínio/HTTPS batem com o que está em `sitemap.xml`, `robots.txt` e a tag
   `canonical` de cada página (hoje configurados para `www.bcontrol.com.br`).
 - Revisão jurídica de `privacidade.html` e `termos.html` (conteúdo modelo, ainda não
@@ -63,3 +66,8 @@ produção"**. Os pontos principais:
 - **"Esqueci a senha do painel."** Peça para alguém com acesso ao Gerenciador de Arquivos
   apagar o arquivo `admin/auth_data.json` — o painel volta a aceitar a senha inicial
   `bcontrol2026` (troque de novo em seguida).
+- **"O formulário de orçamento não chega por e-mail."** O envio usa a função `mail()`
+  nativa do PHP (`envio.php`), que funciona por padrão em praticamente toda hospedagem
+  cPanel. Se mesmo assim não chegar: confirme com o suporte da hospedagem que a função
+  `mail()` do PHP está habilitada para o domínio (raramente vem desligada) e confira a
+  caixa de spam do destinatário na primeira tentativa.

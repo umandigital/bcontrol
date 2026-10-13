@@ -390,14 +390,14 @@
       if (fb && !/^TODO/.test(cfg.socials.facebook || '')) { fb.href = cfg.socials.facebook; fb.removeAttribute('data-toast'); }
     }
 
-    wireOrcamentoForm(cfg);
+    wireOrcamentoForm();
 
     var consent = null;
     try { consent = localStorage.getItem('bcontrol_cookie_consent'); } catch (e) {}
     if (consent === 'accepted') loadAnalytics();
   }
 
-  function wireOrcamentoForm(cfg) {
+  function wireOrcamentoForm() {
     var form = document.getElementById('formOrc');
     if (!form) return;
     form.addEventListener('submit', function (e) {
@@ -408,30 +408,23 @@
 
       var data = new FormData(form);
       var setor = data.get('setor');
-      var realTarget = (cfg.sectorEmails && cfg.sectorEmails[setor]) || 'bcontrol@bcontrol.com.br';
-      data.set('setor_email', realTarget);
-      data.set('_subject', 'Novo pedido de orçamento — bcontrol (' + setor + ')');
-      data.set('_language', 'pt-BR');
-      // Modo de teste: enquanto cfg.testCcEmail estiver preenchido, ele vira o destinatário
-      // real (em vez de só CC), porque cada endereço novo no formsubmit.co precisa que o
-      // DONO da caixa confirme um e-mail de ativação antes de receber qualquer coisa — e só
-      // quem tem acesso à caixa de teste consegue fazer isso. Assim que o cliente apagar
-      // testCcEmail do content/site.json, o formulário volta a entregar direto no e-mail
-      // real de cada setor (sectorEmails), sem precisar mexer em código.
-      var targetEmail = cfg.testCcEmail || realTarget;
-      var endpoint = 'https://formsubmit.co/ajax/' + encodeURIComponent(targetEmail);
 
       var btn = form.querySelector('button[type="submit"]');
       if (btn) btn.disabled = true;
-      fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
-        .then(function (r) { if (!r.ok) throw new Error('erro'); return r.json().catch(function () { return {}; }); })
+      fetch('envio.php', { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+        .then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (j) {
+            if (!r.ok || !j.ok) throw new Error(j.error || 'Não foi possível enviar agora. Tente novamente ou fale pelo WhatsApp.');
+            return j;
+          });
+        })
         .then(function () {
           if (msgEl) { msgEl.textContent = 'Pedido enviado! Em breve nossa equipe entrará em contato.'; msgEl.className = 'field-msg ok'; }
           trackEvent('form_orcamento_enviado', { setor: setor });
           form.reset();
         })
-        .catch(function () {
-          if (msgEl) { msgEl.textContent = 'Não foi possível enviar agora. Tente novamente ou fale pelo WhatsApp.'; msgEl.className = 'field-msg err'; }
+        .catch(function (err) {
+          if (msgEl) { msgEl.textContent = err.message; msgEl.className = 'field-msg err'; }
         })
         .finally(function () { if (btn) btn.disabled = false; });
     });

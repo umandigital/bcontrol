@@ -48,8 +48,8 @@ assets/                    imagens (.webp otimizado + .png de fallback) e favico
   HTML, só `preload="metadata"`), então o arquivo inteiro não é baixado à toa nesses casos.
 
 ### Formulários
-- Formulário de orçamento com envio real via `fetch` (endpoint formsubmit.co — ver
-  pendência 4), roteamento por setor, honeypot anti-spam.
+- Formulário de orçamento com envio real via `fetch` para `envio.php` (endpoint próprio,
+  no mesmo domínio — ver Rodada 8), roteamento por setor, honeypot anti-spam.
 - Link do WhatsApp (`wa.me`) com número e mensagem reais.
 - "Acessar resultados" envia direto (POST real) para o portal de laudos externo;
   "Atualizar cadastro" leva ao Google Forms real — ambos recuperados do site atual
@@ -101,9 +101,10 @@ briefing) — o site já está preparado para recebê-las assim que chegarem, ba
    dedicado a esses dois setores nem no site nem no material recebido. "Controle de
    qualidade" e "Comercial" já usam e-mails reais e específicos (ver Rodada 3 abaixo).
    Se quiser endereços próprios para Águas/Alimentos, é só avisar.
-4. ~~**Confirmar recebimento do formulário de orçamento**~~ — **resolvido**: endpoint
-   (formsubmit.co) ativado e testado, e-mail de confirmação recebido. **Antes de publicar
-   em definitivo**, ver o item "e-mail de teste" no checklist final (Rodada 7).
+4. ~~**Confirmar recebimento do formulário de orçamento**~~ — **resolvido** e **trocado**:
+   o formulário agora envia por um script próprio (`envio.php`, PHP `mail()` nativo do
+   servidor), sem depender de serviço de terceiro — ver Rodada 8. **Antes de publicar em
+   definitivo**, ver o item "e-mail de teste" no checklist final.
 5. **Depoimentos reais** (texto + nome + empresa autorizados) — `content/testimonials.json`.
 6. **Números reais** (parâmetros no escopo) — `content/site.json` → `stats`.
 7. **GA4** (Measurement ID) e eventual pixel de campanha — não existia no site atual;
@@ -195,9 +196,8 @@ essa mesma integração, e de quebra recuperei outros elementos reais que já ex
   (Controle de Qualidade) confirmados reais; `bcontrol@bcontrol.com.br` (Atendimento
   Geral) usado como padrão para Águas/Alimentos, que não tinham endereço próprio.
 - **Formulário de orçamento**: como o site atual usa Contact Form 7 (plugin de WordPress,
-  não portável para um site estático), configurei um endpoint equivalente e gratuito
-  (formsubmit.co) apontando para `bcontrol@bcontrol.com.br` — ver pendência 4 acima sobre
-  o clique de confirmação único.
+  não portável para um site estático), configurei um envio equivalente, hoje feito por
+  `envio.php` (script próprio — ver Rodada 8) apontando para `bcontrol@bcontrol.com.br`.
 
 Isso resolve, sem precisar de mais nenhuma informação do cliente, praticamente todas as
 integrações que antes dependiam de dados externos.
@@ -279,13 +279,50 @@ Netlify, que não se aplica a esta hospedagem.
 **Antes de publicar, troque a senha padrão do painel** (vem configurada com uma senha
 temporária só para o primeiro acesso) em `/admin` → "Alterar senha".
 
+## Rodada 8 — formulário de orçamento passou a usar envio próprio (`envio.php`)
+
+O endpoint formsubmit.co (serviço gratuito de terceiro) funcionava, mas tinha três
+limitações que um script próprio no mesmo servidor resolve de vez: anúncio de patrocinador
+nos e-mails recebidos (só sai no plano pago), textos padrão em inglês (contornado com um
+parâmetro, mas sempre meio remendado) e a exigência de clique de confirmação para cada
+endereço novo. Seguindo o mesmo padrão já usado em outros projetos da agência (ex.: Uman),
+criado `envio.php` na raiz do site:
+
+- Recebe o POST do formulário (`#formOrc`), valida nome/e-mail/setor e confere o campo
+  escondido anti-spam (honeypot) — igual já funcionava antes.
+- **O destinatário é decidido no servidor**, lendo `content/site.json` (`sectorEmails` e,
+  enquanto preenchido, `testCcEmail`) — o navegador não escolhe mais pra onde o e-mail vai,
+  o que fecha a possibilidade de alguém usar o formulário pra mandar e-mail para um
+  endereço arbitrário.
+- Envia com `mail()` nativo do PHP (sem precisar de conta em serviço nenhum, nem SMTP) —
+  funciona de forma simples na grande maioria das hospedagens cPanel, que já vêm com
+  sendmail/Exim configurado.
+- Sanitiza os campos (remove quebras de linha) antes de usar em assunto/cabeçalho, para
+  impedir injeção de cabeçalho de e-mail.
+- Resposta em JSON (`{"ok":true}` ou `{"ok":false,"error":"..."}`), consumida pelo mesmo
+  `fetch()` que já existia em `js/main.js` (só trocou o endereço de destino e removeu a
+  lógica que agora é só do servidor).
+
+**Teste realizado**: validação de método (só aceita POST), honeypot, campos obrigatórios,
+e a lógica de resolução de destinatário (confirmado que `testCcEmail` é priorizado quando
+preenchido) — tudo conferido localmente com PHP. O envio de e-mail de verdade (`mail()`)
+só pode ser validado na hospedagem final, porque depende do sendmail/Exim do servidor, que
+não existe neste ambiente de desenvolvimento — funciona de forma padrão em qualquer cPanel.
+
+**Recomendação para a primeira ativação em produção**: abra `envio.php` e confirme que o
+e-mail definido em `FROM_EMAIL` (hoje `nao-responda@bcontrol.com.br`) é um endereço real
+do domínio — isso ajuda a não cair em spam. Depois, mande um pedido de teste pelo próprio
+site com `testCcEmail` preenchido para confirmar a entrega antes de liberar de vez.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Trocar a senha padrão do painel `/admin` (ver Rodada 7).
+- [ ] Conferir em `envio.php` se `FROM_EMAIL` é um endereço real do domínio final (ver
+      Rodada 8) e mandar um pedido de teste pelo formulário antes de liberar de vez.
 - [ ] Decidir se `content/site.json` → `testCcEmail` continua apontando para o e-mail de
       teste ou se já pode ser esvaziado, para que os orçamentos cheguem direto aos e-mails
       reais por setor (ele foi usado só para validar o envio sem acesso às caixas de
-      entrada da bcontrol — ver Rodada 3/pendência 4, já confirmado funcionando).
+      entrada da bcontrol — já confirmado funcionando).
 - [ ] Preencher `content/site.json` → `socials.instagram` (ainda não informado).
 - [ ] Preencher `content/site.json` → `ga4Id`, se for usar Google Analytics 4.
 - [ ] Revisão jurídica de `privacidade.html` e `termos.html` (conteúdo modelo).
