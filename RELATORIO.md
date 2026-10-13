@@ -107,8 +107,9 @@ briefing) — o site já está preparado para recebê-las assim que chegarem, ba
    definitivo**, ver o item "e-mail de teste" no checklist final.
 5. **Depoimentos reais** (texto + nome + empresa autorizados) — `content/testimonials.json`.
 6. **Números reais** (parâmetros no escopo) — `content/site.json` → `stats`.
-7. **GA4** (Measurement ID) e eventual pixel de campanha — não existia no site atual;
-   `content/site.json` → `ga4Id`.
+7. ~~**GA4**~~ — **resolvido**: Measurement ID da propriedade criada na conta GA4 da
+   agência (Uman) configurado em `content/site.json` → `ga4Id` (Rodada 14). Eventual pixel
+   de campanha (Meta/Google Ads) segue em aberto, se for do interesse.
 8. **Instagram** — não encontrado no site atual (só havia Facebook, já linkado) —
    `content/site.json` → `socials.instagram`.
 9. **Revisão jurídica** de `privacidade.html` e `termos.html` (conteúdo modelo).
@@ -411,18 +412,27 @@ e-mail definido em `FROM_EMAIL` (hoje `nao-responda@bcontrol.com.br`) é um ende
 do domínio — isso ajuda a não cair em spam. Depois, mande um pedido de teste pelo próprio
 site com `testCcEmail` preenchido para confirmar a entrega antes de liberar de vez.
 
+## Rodada 14 — e-mail de teste desativado + Google Analytics 4 ativado
+
+- `content/site.json` → `testCcEmail` esvaziado: os pedidos de orçamento, que durante os
+  testes todos caíam no e-mail de teste (`luciano@umandigital.com.br`), agora chegam
+  direto nos e-mails reais por setor (`sectorEmails`), como já estava configurado.
+- `content/site.json` → `ga4Id` preenchido com o Measurement ID (`G-RZ1NK1PP6T`) da
+  propriedade "Site Bcontrol" criada na conta GA4 da agência (Uman). A integração já
+  existia pronta desde o início (só carrega depois que o visitante aceita o banner de
+  cookies, requisito de LGPD) — confirmado localmente que o script do GA4 é injetado com
+  o ID correto assim que o consentimento é dado.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
       (ver Rodada 9), em vez de todo mundo usar a mesma conta.
 - [ ] Conferir em `envio.php` se `FROM_EMAIL` é um endereço real do domínio final (ver
       Rodada 8) e mandar um pedido de teste pelo formulário antes de liberar de vez.
-- [ ] Decidir se `content/site.json` → `testCcEmail` continua apontando para o e-mail de
-      teste ou se já pode ser esvaziado, para que os orçamentos cheguem direto aos e-mails
-      reais por setor (ele foi usado só para validar o envio sem acesso às caixas de
-      entrada da bcontrol — já confirmado funcionando).
+- [x] ~~Decidir sobre `content/site.json` → `testCcEmail`~~ — esvaziado (Rodada 14): os
+      orçamentos já chegam direto nos e-mails reais por setor.
 - [ ] Preencher `content/site.json` → `socials.instagram` (ainda não informado).
-- [ ] Preencher `content/site.json` → `ga4Id`, se for usar Google Analytics 4.
+- [x] ~~Preencher `content/site.json` → `ga4Id`~~ — feito (Rodada 14).
 - [ ] Revisão jurídica de `privacidade.html` e `termos.html` (conteúdo modelo).
 - [ ] Depoimentos reais e números reais (`content/testimonials.json`, `content/site.json`
       → `stats`), quando disponíveis.
