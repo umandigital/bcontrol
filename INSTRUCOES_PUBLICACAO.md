@@ -36,7 +36,10 @@ em último caso, **775**).
 4. Qualquer pessoa logada pode editar FAQ, serviços, equipe, depoimentos, clientes,
    segmentos, documentos (incluindo subir PDF novo) e as configurações gerais do site
    (e-mails por setor, WhatsApp, redes sociais etc.) direto pelo navegador, sem mexer em
-   código.
+   código. **Fotos e logos (equipe, segmentos, clientes, serviços) também podem ser
+   trocados direto pelo painel** — é só escolher o novo arquivo (JPG, PNG ou WEBP) que o
+   site redimensiona e otimiza sozinho. Isso depende da extensão **GD do PHP**, que vem
+   habilitada por padrão em praticamente toda hospedagem cPanel.
 
 ## 4. Antes de considerar "no ar de vez"
 
@@ -70,6 +73,10 @@ produção"**. Os pontos principais:
   `bcontrol2026`); entre, troque a senha em "Alterar senha" e recrie as demais contas em
   "Usuários". Se você tem outra conta ativa no painel, é mais simples só pedir pra ela
   entrar em "Usuários" e remover/recriar a sua.
+- **"Ao subir uma foto no painel, aparece erro dizendo que falta a extensão GD."** Peça
+  para o suporte da hospedagem habilitar a extensão **GD** do PHP (é padrão, raramente
+  vem desligada). Enquanto isso, dá para subir a imagem já tratada por FTP/File Manager e
+  só apontar o caminho no campo de texto do painel.
 - **"O formulário de orçamento não chega por e-mail."** O envio usa a função `mail()`
   nativa do PHP (`envio.php`), que funciona por padrão em praticamente toda hospedagem
   cPanel. Se mesmo assim não chegar: confirme com o suporte da hospedagem que a função

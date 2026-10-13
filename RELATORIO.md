@@ -132,10 +132,10 @@ que algo é salvo, a versão anterior do arquivo fica guardada automaticamente e
 pode ser editado diretamente (é texto simples) e publicado por FTP/File Manager — útil
 para quem já tem prática com isso.
 
-**Trocar fotos/logos:** o painel edita texto e o PDF de documentos, mas a troca de fotos
-(equipe, segmentos, clientes, serviços) continua sendo por FTP/File Manager, mantendo o
-mesmo nome de arquivo — porque essas imagens passam por um preparo prévio (redimensionar e
-gerar a versão `.webp` leve) que não dá para fazer com segurança só pelo navegador.
+**Trocar fotos/logos:** também dá para fazer direto pelo painel (equipe, segmentos,
+clientes, serviços) — ele redimensiona e otimiza a imagem automaticamente (ver Rodada 10).
+Continua existindo a opção de subir por FTP/File Manager uma imagem já tratada, para quem
+preferir.
 
 **Cache do navegador ao trocar `assets/*`, `css/style.css` ou `js/main.js`:** esses
 arquivos são referenciados com `?v=N` (ex.: `logo.png?v=4`) — é assim que o navegador sabe
@@ -294,6 +294,37 @@ externo, igual ao antigo `auth_data.json`, que foi removido):
 - Testado localmente: login com o usuário inicial, criação de usuário novo + login com
   ele, remoção de usuário, proteção contra remover o último/o próprio usuário logado, e
   troca de senha — tudo funcionando.
+
+## Rodada 10 — upload de imagem direto pelo painel (sem precisar de FTP)
+
+Até aqui, trocar uma foto (equipe, segmentos, clientes, serviços) exigia acesso à
+hospedagem (FTP/File Manager) e conhecimento do pipeline de otimização (gerar `.webp` +
+redimensionar). Como quem vai operar o painel no dia a dia não tem (nem deve precisar ter)
+acesso à hospedagem, os campos de imagem desses 4 conteúdos (Serviços, Equipe, Clientes,
+Segmentos) agora aceitam **upload direto pelo navegador**:
+
+- Mostra uma prévia da imagem atual antes de trocar.
+- Ao enviar um arquivo novo (JPG, PNG ou WEBP), o servidor: corrige a rotação de fotos de
+  celular (quando o aparelho grava a informação de orientação), redimensiona para o
+  tamanho real de exibição (sem aumentar imagens que já são menores) e gera as duas
+  versões que o site usa — `.webp` leve e o formato de reserva (`.png`, preservando
+  transparência de logos, ou `.jpg` para os segmentos) — exatamente como as imagens já
+  tratadas manualmente nas rodadas anteriores.
+- O nome do arquivo final é gerado automaticamente (com um sufixo único), e os arquivos
+  antigos desse mesmo campo são apagados — sem acumular lixo nem precisar mexer em
+  `ASSET_VERSION`/cache do navegador, porque o nome novo já força o carregamento fresco.
+- Continua dando pra editar o caminho manualmente (sem subir arquivo), para quem preferir
+  seguir subindo a imagem já tratada por FTP, como antes.
+- Depende da extensão **GD do PHP** (padrão em praticamente toda hospedagem cPanel); se
+  não estiver disponível, o painel avisa com uma mensagem clara em vez de falhar calado.
+
+**Testado localmente**: upload com redimensionamento correto (1200×900 → 700×525 para
+Equipe), não ampliação de imagem menor que o tamanho máximo, preservação de transparência
+em logo PNG, achatamento correto para fundo branco no fallback `.jpg` dos Segmentos, e
+remoção dos arquivos antigos após a troca.
+
+Aproveitada a rodada para trocar também a foto do escritório (seção de Orçamento) pela
+nova enviada pelo cliente (`assets/escritorio.png`/`.webp`, versão `?v=5`).
 
 ## Rodada 8 — formulário de orçamento passou a usar envio próprio (`envio.php`)
 

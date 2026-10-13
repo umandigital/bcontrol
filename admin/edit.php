@@ -53,6 +53,110 @@ function admin_handle_upload(array $fileInfo, string $uploadDirRel): ?string {
   return $destRel;
 }
 
+/**
+ * Recebe uma imagem enviada pelo navegador, redimensiona (sem aumentar imagens já
+ * menores), corrige a rotação de fotos de celular (EXIF) e grava duas versões —
+ * .webp (leve) e o formato de fallback (.png, preservando transparência de logos, ou
+ * .jpg) — exatamente como o resto do site já espera via o helper picture() do main.js.
+ * Apaga os arquivos antigos desse mesmo campo (se houver) para não acumular lixo.
+ */
+function admin_process_image_upload(array $fileInfo, string $uploadDirRel, int $maxWidth, string $fallbackExt, ?string $oldBasePath): ?string {
+  if (empty($fileInfo['name']) || ($fileInfo['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) return null;
+  if (!function_exists('imagecreatetruecolor')) {
+    throw new RuntimeException('O servidor não tem a extensão de imagens (GD) do PHP habilitada. Peça ao suporte da hospedagem para ativá-la.');
+  }
+  if (!is_uploaded_file($fileInfo['tmp_name'])) {
+    throw new RuntimeException('Upload inválido.');
+  }
+
+  $info = @getimagesize($fileInfo['tmp_name']);
+  if (!$info) {
+    throw new RuntimeException('O arquivo enviado não é uma imagem válida.');
+  }
+  $mime = $info['mime'];
+  switch ($mime) {
+    case 'image/jpeg': $im = @imagecreatefromjpeg($fileInfo['tmp_name']); break;
+    case 'image/png': $im = @imagecreatefrompng($fileInfo['tmp_name']); break;
+    case 'image/webp': $im = @imagecreatefromwebp($fileInfo['tmp_name']); break;
+    case 'image/gif': $im = @imagecreatefromgif($fileInfo['tmp_name']); break;
+    default:
+      throw new RuntimeException('Formato de imagem não suportado. Envie um arquivo JPG, PNG ou WEBP.');
+  }
+  if (!$im) {
+    throw new RuntimeException('Não foi possível ler a imagem enviada (arquivo corrompido?).');
+  }
+
+  // Corrige fotos de celular giradas (comum em JPEG com metadado de orientação).
+  if ($mime === 'image/jpeg' && function_exists('exif_read_data')) {
+    $exif = @exif_read_data($fileInfo['tmp_name']);
+    $orientation = $exif['Orientation'] ?? 1;
+    if ($orientation === 3) { $im = imagerotate($im, 180, 0); }
+    elseif ($orientation === 6) { $im = imagerotate($im, -90, 0); }
+    elseif ($orientation === 8) { $im = imagerotate($im, 90, 0); }
+  }
+
+  imagealphablending($im, true);
+  imagesavealpha($im, true);
+
+  $w = imagesx($im);
+  $h = imagesy($im);
+  if ($w > $maxWidth) {
+    $newW = $maxWidth;
+    $newH = (int)round($h * $maxWidth / $w);
+    $resized = imagecreatetruecolor($newW, $newH);
+    imagealphablending($resized, false);
+    imagesavealpha($resized, true);
+    imagecopyresampled($resized, $im, 0, 0, 0, 0, $newW, $newH, $w, $h);
+    imagedestroy($im);
+    $im = $resized;
+  }
+
+  $origName = basename($fileInfo['name']);
+  $safeBase = preg_replace('/[^a-zA-Z0-9_\-]/', '-', (string)pathinfo($origName, PATHINFO_FILENAME));
+  $safeBase = trim((string)$safeBase, '-');
+  if ($safeBase === '') $safeBase = 'imagem';
+  $safeBase .= '-' . substr(md5((string)microtime(true) . random_int(0, 999999)), 0, 8);
+
+  $destDirAbs = rtrim(SITE_ROOT . '/' . $uploadDirRel, '/');
+  if (!is_dir($destDirAbs)) mkdir($destDirAbs, 0775, true);
+
+  $webpAbs = $destDirAbs . '/' . $safeBase . '.webp';
+  $fallbackAbs = $destDirAbs . '/' . $safeBase . '.' . $fallbackExt;
+
+  if (!imagewebp($im, $webpAbs, 80)) {
+    imagedestroy($im);
+    throw new RuntimeException('Falha ao gerar a versão .webp da imagem no servidor.');
+  }
+
+  if ($fallbackExt === 'jpg') {
+    // JPEG não tem transparência: achata sobre fundo branco antes de salvar.
+    $flat = imagecreatetruecolor(imagesx($im), imagesy($im));
+    $white = imagecolorallocate($flat, 255, 255, 255);
+    imagefill($flat, 0, 0, $white);
+    imagealphablending($flat, true);
+    imagecopy($flat, $im, 0, 0, 0, 0, imagesx($im), imagesy($im));
+    $ok = imagejpeg($flat, $fallbackAbs, 85);
+    imagedestroy($flat);
+  } else {
+    $ok = imagepng($im, $fallbackAbs, 6);
+  }
+  imagedestroy($im);
+
+  if (!$ok) {
+    throw new RuntimeException('Falha ao gravar a imagem no servidor (verifique permissões de escrita em ' . $uploadDirRel . ').');
+  }
+
+  // Remove os arquivos antigos desse mesmo campo, se existiam.
+  if ($oldBasePath) {
+    foreach (['webp', $fallbackExt] as $oldExt) {
+      $oldAbs = SITE_ROOT . '/' . $oldBasePath . '.' . $oldExt;
+      if (is_file($oldAbs)) @unlink($oldAbs);
+    }
+  }
+
+  return rtrim($uploadDirRel, '/') . '/' . $safeBase;
+}
+
 /** Reorganiza a bagunça clássica do $_FILES multidimensional em algo navegável como o $_POST. */
 function admin_reshape_files(array $filesNode): array {
   if (!isset($filesNode['name'])) return [];
@@ -90,6 +194,14 @@ function build_field_value(array $field, $postValue, $filesValue) {
       }
       if ($destRelative) return $destRelative;
       return trim((string)(is_array($postValue) ? '' : ($postValue ?? '')));
+    case 'image':
+      $destRelative = null;
+      $oldValue = trim((string)(is_array($postValue) ? '' : ($postValue ?? '')));
+      if (is_array($filesValue) && !empty($filesValue['name'])) {
+        $destRelative = admin_process_image_upload($filesValue, $field['uploadDir'], $field['maxWidth'], $field['fallbackExt'], $oldValue !== '' ? $oldValue : null);
+      }
+      if ($destRelative) return $destRelative;
+      return $oldValue;
     case 'object':
       $out = [];
       foreach ($field['fields'] as $sub) {
@@ -183,6 +295,19 @@ function render_field(array $field, $value, string $dataPath, string $uploadPath
         . render_text_input($name, $value)
         . '<p class="hint">Caminho atual do arquivo. ' . h($field['hint'] ?? '') . ' Para substituir, selecione um novo PDF abaixo:</p>'
         . '<input type="file" name="' . h($uploadName) . '" accept="' . h($field['accept'] ?? '') . '">'
+        . '</div>';
+    case 'image':
+      $uploadName = $uploadPath . '[' . $field['name'] . ']';
+      $preview = '';
+      if ($value) {
+        $previewSrc = '../' . h($value) . '.' . h($field['fallbackExt']) . '?v=' . time();
+        $preview = '<img src="' . $previewSrc . '" alt="" class="img-preview">';
+      }
+      return '<div class="field">' . $label
+        . $preview
+        . render_text_input($name, $value)
+        . '<p class="hint">Caminho atual da imagem. Para trocar, selecione um novo arquivo (JPG, PNG ou WEBP) — o site gera a versão otimizada automaticamente:</p>'
+        . '<input type="file" name="' . h($uploadName) . '" accept="image/jpeg,image/png,image/webp">'
         . '</div>';
     case 'object':
       $inner = '';

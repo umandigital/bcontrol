@@ -65,7 +65,7 @@ return [
         ['name' => 'norm', 'label' => 'Norma/legislação', 'type' => 'string'],
       ]],
       ['name' => 'chips', 'label' => 'Público-alvo (chips)', 'type' => 'list', 'itemType' => 'string'],
-      ['name' => 'image', 'label' => 'Imagem (caminho em assets/, sem extensão)', 'type' => 'string', 'hint' => 'Ex.: assets/serv_agua — o site usa .webp com fallback .png automaticamente. Para trocar a foto, envie o novo arquivo por FTP/File Manager mantendo o mesmo nome.'],
+      ['name' => 'image', 'label' => 'Foto do serviço', 'type' => 'image', 'uploadDir' => 'assets', 'maxWidth' => 900, 'fallbackExt' => 'png'],
       ['name' => 'imageAlt', 'label' => 'Texto alternativo da imagem', 'type' => 'string'],
     ],
   ],
@@ -79,7 +79,7 @@ return [
     'fields' => [
       ['name' => 'name', 'label' => 'Nome', 'type' => 'string'],
       ['name' => 'role', 'label' => 'Cargo', 'type' => 'string'],
-      ['name' => 'image', 'label' => 'Imagem (caminho em assets/, sem extensão)', 'type' => 'string', 'hint' => 'Para trocar a foto, envie o novo arquivo por FTP/File Manager mantendo o mesmo nome.'],
+      ['name' => 'image', 'label' => 'Foto', 'type' => 'image', 'uploadDir' => 'assets', 'maxWidth' => 700, 'fallbackExt' => 'png'],
     ],
   ],
 
@@ -104,7 +104,7 @@ return [
     'itemLabelField' => 'name',
     'fields' => [
       ['name' => 'name', 'label' => 'Nome', 'type' => 'string'],
-      ['name' => 'logo', 'label' => 'Logo (caminho em assets/, sem extensão)', 'type' => 'string', 'hint' => 'Para trocar o logo, envie o novo arquivo por FTP/File Manager mantendo o mesmo nome.'],
+      ['name' => 'logo', 'label' => 'Logo', 'type' => 'image', 'uploadDir' => 'assets', 'maxWidth' => 500, 'fallbackExt' => 'png'],
     ],
   ],
 
@@ -116,7 +116,7 @@ return [
     'itemLabelField' => 'label',
     'fields' => [
       ['name' => 'label', 'label' => 'Nome do segmento', 'type' => 'string'],
-      ['name' => 'image', 'label' => 'Imagem (caminho em assets/, sem extensão)', 'type' => 'string', 'hint' => 'Para trocar a foto, envie o novo arquivo por FTP/File Manager mantendo o mesmo nome.'],
+      ['name' => 'image', 'label' => 'Foto do segmento', 'type' => 'image', 'uploadDir' => 'assets', 'maxWidth' => 900, 'fallbackExt' => 'jpg'],
     ],
   ],
 
