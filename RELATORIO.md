@@ -643,6 +643,38 @@ gerar dois tipos de pacote:
   `/admin`): todo o código (HTML/CSS/JS/admin), **sem** `content/*.json` — assim o
   conteúdo já inserido nunca é tocado.
 
+## Rodada 21 — causa raiz real do CTA, TECNOPUC e logo com fundo transparente
+
+- **Achada a causa real do bug do CTA "Pesquisa de satisfação".** Nas rodadas
+  anteriores eu tinha corrigido só um efeito colateral (modo escuro forçado do
+  Android); o print mandado desta vez mostrou o problema de verdade: o botão estava
+  virando um quadrado de 38×38px (do tamanho dos ícones de Instagram/Facebook do lado),
+  com o texto "Pesquisa de satisfação" vazando pra fora da área colorida — por isso
+  parecia que faltava cor de fundo. Causa: a regra `.social a` (que estiliza os ícones)
+  é mais específica no CSS do que `.satisfacao-cta`, então vencia e forçava o tamanho
+  de ícone no botão, mesmo ele tendo sua própria regra de pílula. Corrigido excluindo
+  explicitamente o `.satisfacao-cta` da regra `.social a`. Testado: o botão agora mede
+  ~200px de largura (não 38px), com fundo verde-azulado preenchendo atrás do texto
+  inteiro.
+- **"TECNOPUC" removido** da linha de endereço que fica embaixo da foto do escritório,
+  ao lado do formulário de orçamento (continua aparecendo nos outros lugares do site —
+  topo, "quem somos", rodapé — só foi tirado desse local específico, como pedido).
+- **Logos de clientes agora ficam com fundo transparente automaticamente.** Ao enviar
+  uma logo pelo campo "Clientes" no admin, o sistema detecta a cor de fundo (lendo os 4
+  cantos da imagem) e apaga só o fundo — a parte conectada à borda da imagem — deixando
+  transparente, sem mexer em partes internas da logo (ex.: o miolo de uma letra "O" ou
+  "R" continua do jeito que está, só o fundo ao redor da logo é que vira transparente).
+  Funciona com qualquer cor de fundo sólida (branco é o caso mais comum, mas não é a
+  única). Testado com uma imagem sintética (fundo branco + uma forma com um furo
+  branco por dentro) e depois com uma simulação de upload real pelo painel: o fundo
+  externo saiu transparente e o furo interno continuou intacto.
+
+**Testado**: as 3 correções verificadas com teste automatizado antes de subir — CTA
+medido via `getBoundingClientRect` (confirma a largura/formato corretos), remoção de
+fundo testada isoladamente e depois pelo fluxo real de upload do admin (login, POST
+multipart, conferência do PNG/WEBP gerados sobre um fundo escuro para enxergar a
+transparência).
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"

@@ -110,7 +110,7 @@ return [
     'itemLabelField' => 'name',
     'fields' => [
       ['name' => 'name', 'label' => 'Nome', 'type' => 'string'],
-      ['name' => 'logo', 'label' => 'Logo', 'type' => 'image', 'uploadDir' => 'assets', 'maxWidth' => 500, 'fallbackExt' => 'png'],
+      ['name' => 'logo', 'label' => 'Logo', 'type' => 'image', 'uploadDir' => 'assets', 'maxWidth' => 500, 'fallbackExt' => 'png', 'removeWhiteBg' => true],
     ],
   ],
 

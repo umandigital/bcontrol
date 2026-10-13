@@ -60,7 +60,64 @@ function admin_handle_upload(array $fileInfo, string $uploadDirRel): ?string {
  * .jpg) — exatamente como o resto do site já espera via o helper picture() do main.js.
  * Apaga os arquivos antigos desse mesmo campo (se houver) para não acumular lixo.
  */
-function admin_process_image_upload(array $fileInfo, string $uploadDirRel, int $maxWidth, string $fallbackExt, ?string $oldBasePath): ?string {
+/**
+ * Apaga (deixa transparente) o fundo de uma logo, partindo das bordas da imagem.
+ * Usa a cor mais comum entre os 4 cantos como "cor de fundo" e espalha a partir dali
+ * só por pixels vizinhos parecidos com essa cor — então não mexe em formas internas
+ * da logo (ex.: o miolo branco de uma letra "O"), só no fundo mesmo, que está
+ * conectado à borda da imagem. Pixels na faixa de transição ficam parcialmente
+ * transparentes, pra não deixar uma borda serrilhada dura.
+ */
+function admin_strip_logo_background($im, int $tolerance = 28, int $soft = 20): void {
+  if (!imageistruecolor($im)) imagepalettetotruecolor($im);
+  imagealphablending($im, false);
+  imagesavealpha($im, true);
+  $w = imagesx($im);
+  $h = imagesy($im);
+  if ($w < 2 || $h < 2) return;
+
+  $counts = [];
+  foreach ([[0, 0], [$w - 1, 0], [0, $h - 1], [$w - 1, $h - 1]] as [$cx, $cy]) {
+    $c = imagecolorat($im, $cx, $cy) & 0xFFFFFF; // ignora alpha na amostragem da cor de fundo
+    $counts[$c] = ($counts[$c] ?? 0) + 1;
+  }
+  arsort($counts);
+  $bgRaw = (int) array_key_first($counts);
+  $bgR = ($bgRaw >> 16) & 0xFF;
+  $bgG = ($bgRaw >> 8) & 0xFF;
+  $bgB = $bgRaw & 0xFF;
+
+  $visited = array_fill(0, $w * $h, false);
+  $queue = new SplQueue();
+  for ($x = 0; $x < $w; $x++) { $queue->enqueue([$x, 0]); $queue->enqueue([$x, $h - 1]); }
+  for ($y = 0; $y < $h; $y++) { $queue->enqueue([0, $y]); $queue->enqueue([$w - 1, $y]); }
+
+  while (!$queue->isEmpty()) {
+    [$x, $y] = $queue->dequeue();
+    if ($x < 0 || $x >= $w || $y < 0 || $y >= $h) continue;
+    $key = $y * $w + $x;
+    if ($visited[$key]) continue;
+    $visited[$key] = true;
+
+    $px = imagecolorat($im, $x, $y);
+    $r = ($px >> 16) & 0xFF;
+    $g = ($px >> 8) & 0xFF;
+    $b = $px & 0xFF;
+    $dist = sqrt((($r - $bgR) ** 2) + (($g - $bgG) ** 2) + (($b - $bgB) ** 2));
+    if ($dist > $tolerance + $soft) continue; // não é fundo: não mexe nem espalha a partir daqui
+
+    $newAlpha = $dist <= $tolerance ? 127 : (int) round(127 * (1 - ($dist - $tolerance) / $soft));
+    if ($newAlpha > 0) {
+      imagesetpixel($im, $x, $y, imagecolorallocatealpha($im, $r, $g, $b, $newAlpha));
+    }
+    $queue->enqueue([$x + 1, $y]);
+    $queue->enqueue([$x - 1, $y]);
+    $queue->enqueue([$x, $y + 1]);
+    $queue->enqueue([$x, $y - 1]);
+  }
+}
+
+function admin_process_image_upload(array $fileInfo, string $uploadDirRel, int $maxWidth, string $fallbackExt, ?string $oldBasePath, bool $removeWhiteBg = false): ?string {
   if (empty($fileInfo['name']) || ($fileInfo['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) return null;
   if (!function_exists('imagecreatetruecolor')) {
     throw new RuntimeException('O servidor não tem a extensão de imagens (GD) do PHP habilitada. Peça ao suporte da hospedagem para ativá-la.');
@@ -109,6 +166,10 @@ function admin_process_image_upload(array $fileInfo, string $uploadDirRel, int $
     imagecopyresampled($resized, $im, 0, 0, 0, 0, $newW, $newH, $w, $h);
     imagedestroy($im);
     $im = $resized;
+  }
+
+  if ($removeWhiteBg) {
+    admin_strip_logo_background($im);
   }
 
   $origName = basename($fileInfo['name']);
@@ -206,7 +267,7 @@ function build_field_value(array $field, $postValue, $filesValue) {
       $destRelative = null;
       $oldValue = trim((string)(is_array($postValue) ? '' : ($postValue ?? '')));
       if (is_array($filesValue) && !empty($filesValue['name'])) {
-        $destRelative = admin_process_image_upload($filesValue, $field['uploadDir'], $field['maxWidth'], $field['fallbackExt'], $oldValue !== '' ? $oldValue : null);
+        $destRelative = admin_process_image_upload($filesValue, $field['uploadDir'], $field['maxWidth'], $field['fallbackExt'], $oldValue !== '' ? $oldValue : null, !empty($field['removeWhiteBg']));
       }
       if ($destRelative) return $destRelative;
       return $oldValue;
@@ -323,7 +384,7 @@ function render_field(array $field, $value, string $dataPath, string $uploadPath
       return '<div class="field">' . $label
         . $preview
         . render_text_input($name, $value)
-        . '<p class="hint">Caminho atual da imagem. Para trocar, selecione um novo arquivo (JPG, PNG ou WEBP) — o site gera a versão otimizada automaticamente:</p>'
+        . '<p class="hint">Caminho atual da imagem. Para trocar, selecione um novo arquivo (JPG, PNG ou WEBP) — o site gera a versão otimizada automaticamente' . (!empty($field['removeWhiteBg']) ? ' e remove o fundo da imagem, deixando transparente' : '') . ':</p>'
         . '<input type="file" name="' . h($uploadName) . '" accept="image/jpeg,image/png,image/webp">'
         . '</div>';
     case 'object':

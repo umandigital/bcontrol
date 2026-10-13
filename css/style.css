@@ -292,9 +292,9 @@ footer a:hover{color:#fff}
 .flogo{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .flogo img{height:40px;filter:brightness(0) invert(1);opacity:.95}
 .social{display:flex;gap:10px;margin-top:12px;align-items:center;flex-wrap:wrap}
-.social a{width:38px;height:38px;border:1px solid #3f7d70;border-radius:10px;display:grid;place-items:center;flex:0 0 auto}
+.social a:not(.satisfacao-cta){width:38px;height:38px;border:1px solid #3f7d70;border-radius:10px;display:grid;place-items:center;flex:0 0 auto}
 .social svg{width:18px;height:18px;fill:#cfe6df}
-.social a:hover{background:#17604f}
+.social a:not(.satisfacao-cta):hover{background:#17604f}
 .satisfacao-cta{display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:10px;background:var(--teal);color:#fff;font-size:13px;font-weight:800;white-space:nowrap;width:auto}
 .satisfacao-cta:hover{background:var(--teal-d)}
 .copy{border-top:1px solid #245149;margin-top:34px;padding-top:18px;font-size:12px;color:#7ba69b;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
