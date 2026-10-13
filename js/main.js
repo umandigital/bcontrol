@@ -572,9 +572,6 @@
       if (hasCadastro) { cadastroLink.setAttribute('href', cfg.cadastroUrl); cadastroLink.removeAttribute('data-toast'); }
     }
 
-    var kitBtn = document.querySelector('.kit');
-    // kit de coleta continua como aviso até termos o PDF/formulário definitivo (ver RELATORIO.md)
-
     document.querySelectorAll('[data-phone-display]').forEach(function (el) { el.textContent = cfg.phoneDisplay || ''; });
     document.querySelectorAll('[data-address]').forEach(function (el) { el.textContent = cfg.address || ''; });
 

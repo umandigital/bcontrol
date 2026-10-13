@@ -475,6 +475,45 @@ sem scroll horizontal indevido na página (só os carrosséis, que são assim de
 menu mobile funcional em 390/768/900px, dots clicáveis sincronizando com a posição do
 scroll.
 
+## Rodada 17 — revisão final de SEO e limpeza antes da publicação
+
+Revisão completa de tudo que foi implementado para SEO, mais uma varredura geral por
+pendências antes do empacotamento final:
+
+**SEO verificado:**
+- `<title>`, meta description, `canonical`, Open Graph/Twitter cards e dados estruturados
+  (`LocalBusiness`, JSON-LD validado) na página principal — todos presentes e corretos.
+- **Corrigido**: `privacidade.html` e `termos.html` **não tinham `<link rel="canonical">`**
+  (só a página principal tinha) — adicionado nas duas.
+- Hierarquia de headings conferida (um único `<h1>`, `<h2>`/`<h3>` em ordem lógica, sem
+  pular nível) — ok.
+- Todas as imagens com `alt` preenchido — ok.
+- Todos os links internos (`#quem`, `#serv` etc.) batem com um `id` existente — ok.
+- `robots.txt` e `sitemap.xml` consistentes (apontam pro domínio final
+  `www.bcontrol.com.br`, `/admin/` bloqueado) — adicionado `<lastmod>` no sitemap.
+- Adicionado `image` nos dados estruturados `LocalBusiness` (não existia, ajuda o Google a
+  mostrar uma imagem no resultado de busca).
+- Todos os arquivos de `content/*.json` validados (JSON sem erro de sintaxe) e **todas as
+  imagens/PDFs que eles referenciam conferidos como existentes** no disco (nenhuma
+  imagem/arquivo quebrado).
+- Teste automatizado (Playwright) em todas as 4 páginas, desktop e mobile: nenhum erro de
+  console/JavaScript em nenhuma.
+
+**Limpeza de código morto/texto desatualizado encontrada e corrigida:**
+- 3 botões de WhatsApp (`#cta`, `#contato`, flutuante) ainda tinham um aviso
+  `data-toast="WhatsApp: aguardando número oficial"` no HTML — **desatualizado**, o número
+  real já está configurado desde a Rodada 3 e o JavaScript já sobrescrevia esse aviso em
+  tempo de execução; removido da fonte para não ficar um texto incorreto visível em caso
+  de falha do JS ou inspeção de código.
+- Removida uma variável e um comentário mortos em `js/main.js` (referência a um aviso do
+  "kit de coleta" que também já tinha sido resolvido na Rodada 3, mas a variável/comentário
+  continuavam no código sem efeito nenhum).
+
+**Pendências reais, que só o cliente pode resolver (nenhuma é um bug):** seguem listadas
+e sem alteração no checklist abaixo — Instagram, revisão jurídica das páginas legais,
+depoimentos/números reais (se os atuais ainda não forem definitivos), e confirmar o
+domínio final.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
