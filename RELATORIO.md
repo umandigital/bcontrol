@@ -711,6 +711,14 @@ CSS de novo em `?v=13` (lição da Rodada 22 aplicada: toda edição em
 `css/style.css` sobe o número junto, nesta mesma rodada, sem esperar o usuário
 reportar que não viu a mudança).
 
+## Rodada 24 — logo da Uman maior e sem a frase ilegível
+
+A pedido: aumentado o logo "Uman" no rodapé (16px → 22px de altura) e removida a
+frase "Presença e Performance Digital" que vinha embutida no SVG abaixo do nome —
+nesse tamanho pequeno ela não dava pra ler mesmo, só ficava como ruído visual.
+Recortei o `viewBox` do SVG para enquadrar só a marca (nome + bolinha laranja), sem
+sobrar espaço em branco onde estava o texto. CSS em `?v=14`.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
