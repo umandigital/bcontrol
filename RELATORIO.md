@@ -675,6 +675,30 @@ fundo testada isoladamente e depois pelo fluxo real de upload do admin (login, P
 multipart, conferência do PNG/WEBP gerados sobre um fundo escuro para enxergar a
 transparência).
 
+## Rodada 22 — achado: cache do navegador escondendo as correções
+
+Depois de confirmar que o servidor já estava com o código certo (CSS com a correção
+do CTA, imagem do gotejador certa), o problema ainda aparecia no celular. Causa: **eu
+mesmo esqueci de atualizar o número de versão** depois de editar `css/style.css` de
+novo na Rodada 21 (continuava `?v=11`, o mesmo da rodada anterior) — e a imagem
+`assets/hero_fundo.png`/`.webp` nunca teve nenhum número de versão, desde que foi
+trocada pela primeira vez. Como esses arquivos ficam guardados no navegador por até 7
+dias (`Cache-Control: public, max-age=604800`, de propósito, pra não pesar o site),
+qualquer celular que já tinha visitado o site antes continuava vendo a versão antiga
+desses dois arquivos específicos — o resto do site (HTML, que não tem cache) sempre
+aparecia atualizado, por isso só esses dois pontos pareciam "travados".
+
+**Corrigido**: `css/style.css` foi de `?v=11` para `?v=12` (toda vez que o CSS mudar
+de novo, o número tem que subir — isso ficou documentado aqui pra não esquecer de
+novo), e a imagem do topo passou a ter `?v=2` em todos os lugares onde é referenciada
+(o `poster` do vídeo, Open Graph, Twitter Card e dados estruturados) — antes ela nunca
+tinha nenhum número, por isso nunca se atualizava sozinha no navegador de quem já
+tinha visitado o site.
+
+**Para quem só visitou o site depois da Rodada 21** (sem ter em cache a versão
+antiga), nada disso é visível — o problema só afeta quem abriu o site antes e está
+revisitando o mesmo link.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
