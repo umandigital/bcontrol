@@ -437,9 +437,10 @@
     hv.addEventListener('loadedmetadata', setV);
     hv.addEventListener('play', setV);
     hv.addEventListener('canplay', setV);
-    // sem o atributo autoplay no HTML: em mobile/reduced-motion o vídeo nunca
-    // chega a baixar o arquivo inteiro (preload="metadata" só pega os metadados)
-    if (!reduceMotion && !matchMedia('(max-width:640px)').matches) {
+    // sem o atributo autoplay no HTML: em reduced-motion o vídeo nunca chega a
+    // baixar o arquivo inteiro (preload="metadata" só pega os metadados). Toca
+    // também no mobile, a pedido — o vídeo tem ~10MB, baixado só quando entra na tela.
+    if (!reduceMotion) {
       setV();
       hv.play().catch(function () {});
     }
