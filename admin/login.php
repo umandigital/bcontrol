@@ -18,7 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = (string)($_POST['email'] ?? '');
     $password = (string)($_POST['password'] ?? '');
     $user = admin_find_user($users, $email);
-    if ($user && password_verify($password, $user['password_hash'])) {
+    // Hash fixo (de uma senha que não existe) usado quando o e-mail não é encontrado,
+    // para o password_verify() gastar o mesmo tempo de um login com e-mail existente —
+    // sem isso, dava pra descobrir por tempo de resposta quais e-mails têm conta.
+    $dummyHash = '$2y$12$dAgECLE.BXW.bs3qp6fXMuY7n/TvR5caTQ4/GHDmVP7nGwaN4UzY6';
+    $hashToCheck = $user['password_hash'] ?? $dummyHash;
+    $passwordOk = password_verify($password, $hashToCheck);
+    if ($user && $passwordOk) {
       admin_login_reset_fails();
       session_regenerate_id(true);
       $_SESSION['admin_email'] = $user['email'];

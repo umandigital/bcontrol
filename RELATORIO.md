@@ -556,6 +556,63 @@ carregando e mostrando o gotejador, meta tag de `color-scheme` presente nas 4 p�
 CSS cacheado atualizado de `?v=10` para `?v=11` nas 4 páginas, para o visitante não ficar
 com a versão antiga guardada no navegador.
 
+## Rodada 19 — checagem de segurança do painel `/admin`
+
+Revisão linha a linha de toda a autenticação e do `.htaccess`, à procura de brechas
+reais (não só teóricas). Achados dois problemas de verdade, já corrigidos:
+
+- **O bloqueio por tentativas erradas de login não bloqueava de verdade.** Ele contava
+  as tentativas erradas na própria sessão do navegador (cookie) de quem estava tentando
+  — então bastava o atacante **não enviar o cookie** (ou simplesmente usar um cookie
+  novo a cada tentativa) para o contador voltar a zero sempre, testando senha
+  infinitamente sem nunca ser bloqueado de fato. **Corrigido**: o contador agora é
+  guardado num arquivo no servidor por **IP** (`admin/login_attempts.json`, bloqueado
+  de acesso direto pelo `.htaccess` do mesmo jeito que `users.json`), então o bloqueio
+  de 5 tentativas/60s vale mesmo que o atacante troque de sessão. Testado na prática:
+  simulei 5 tentativas erradas, troquei o cookie como se fosse um navegador novo, e a
+  6ª tentativa (de qualquer cookie) continuou bloqueada.
+- **O cookie de sessão do painel não tinha as proteções básicas** (`HttpOnly`,
+  `SameSite`, e `Secure` quando em HTTPS) — isso deixava a sessão de login mais exposta
+  a ser roubada via um eventual XSS ou rede insegura. Corrigido: o cookie agora sai com
+  `HttpOnly` (JavaScript não consegue ler), `SameSite=Lax`, `Secure` automático quando o
+  site estiver em HTTPS (detecta sozinho, não quebra se ainda estiver em HTTP durante
+  testes), e restrito ao caminho `/admin` (não é enviado nas páginas públicas do site).
+  `logout.php` também passou a expirar esse cookie explicitamente, não só destruir a
+  sessão no servidor.
+
+Mais três reforços (sem bug concreto por trás, mas defesa em profundidade, zero risco
+de quebrar algo):
+- `Options -Indexes` no `.htaccess` — impede listagem de arquivos de uma pasta (ex.:
+  `/content/`) caso a hospedagem tenha esse recurso ligado por padrão.
+- Bloqueado acesso direto a `.git/`, `.env`, `.htaccess`, `.htpasswd` pelo `.htaccess` —
+  proteção extra caso algum dia os arquivos internos do repositório (não os do zip de
+  entrega) acabem indo parar no servidor por engano.
+- Cabeçalhos `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN` e
+  `Referrer-Policy` adicionados em todas as respostas.
+- Login agora sempre faz a verificação de senha (contra um hash fixo, se o e-mail não
+  existir) — antes, um e-mail inexistente respondia mais rápido que um existente, o
+  que teoricamente permitiria descobrir por tempo de resposta quais contas existem.
+
+**O que já estava correto e não precisou mexer**: senhas com `bcrypt`
+(`password_hash`/`password_verify`), proteção CSRF em todo formulário que grava dado,
+`session_regenerate_id()` no login (evita fixação de sessão), `users.json` e
+`auth_data.json` bloqueados de acesso direto, upload de imagem validado de verdade (lê
+os bytes da imagem com `getimagesize()`, não só a extensão do nome do arquivo — então
+não dá pra disfarçar um arquivo malicioso de imagem só trocando a extensão), nomes de
+arquivo enviados sempre sanitizados antes de salvar (sem como escrever fora da pasta
+pretendida), e todo texto exibido de volta na tela passa por `htmlspecialchars`.
+
+**Decisão de design, não bug**: qualquer usuário logado pode criar/remover outros
+usuários do painel — isso foi um pedido explícito (sem hierarquia entre contas), então
+não é uma falha a corrigir, só vale lembrar: se uma conta for comprometida, quem a
+controla pode criar outras contas. Não há log de quem fez o quê — também aceitável para
+uma equipe pequena, mas registrar aqui para o caso de precisar de auditoria no futuro.
+
+**Testado**: todo o fluxo de login/logout/CSRF/senha errada verificado após as
+mudanças, com servidor PHP local — login legítimo continua funcionando normal, bloqueio
+por tentativas erradas confirmado funcionando mesmo trocando de cookie, nenhuma
+regressão nas outras páginas do painel.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"

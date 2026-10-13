@@ -22,12 +22,28 @@
 
 ErrorDocument 404 /404.html
 
-# Bloqueia acesso direto via navegador aos arquivos com os hashes de senha do painel
-# e às cópias de segurança automáticas do conteúdo (content/.backups/).
-<FilesMatch "^(auth_data|users)\.json$">
+# Desliga a listagem automática de diretório (ex.: alguém acessar /content/ direto
+# pelo navegador e ver a lista de arquivos, em vez de dar 403/404).
+Options -Indexes
+
+# Cabeçalhos básicos de segurança.
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Bloqueia acesso direto via navegador aos arquivos com os hashes de senha do painel,
+# ao contador de tentativas de login, e a pastas internas que não deveriam nunca ir
+# para o navegador (ex.: .git, se alguém publicar sem usar o zip de entrega).
+<FilesMatch "^(auth_data|users|login_attempts)\.json$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "^\.(git|env|htaccess|htpasswd)">
   Require all denied
 </FilesMatch>
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^content/\.backups/ - [F,L]
+  RewriteRule ^\.git/ - [F,L]
 </IfModule>
