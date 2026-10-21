@@ -815,6 +815,14 @@ admin, com informação real que eu não tinha:
 - O Facebook continua `facebook.com/biocontrolrs` nos dois lugares (sem mudança) —
   segue como pendência eu precisar do link certo, se esse realmente estiver errado.
 
+Também conferi `content/gallery.json`, que eu não tinha tocado nessa rodada — e ainda
+bem que conferi: o site de teste já tem **13 fotos reais** cadastradas na galeria
+institucional (uploads recentes), enquanto a base do repositório ainda estava vazia.
+Por isso, o zip desta rodada **não inclui** `team.json`, `clients.json`,
+`testimonials.json` nem `gallery.json` — só os 5 arquivos de conteúdo que eu
+realmente editei (`site.json`, `faq.json`, `documents.json`, `segments.json`,
+`services.json`), já conferidos item a item contra o que está no ar.
+
 CSS em `?v=16`, JS em `?v=14`.
 
 ## Checklist final antes de publicar em produção
