@@ -719,6 +719,81 @@ nesse tamanho pequeno ela não dava pra ler mesmo, só ficava como ruído visual
 Recortei o `viewBox` do SVG para enquadrar só a marca (nome + bolinha laranja), sem
 sobrar espaço em branco onde estava o texto. CSS em `?v=14`.
 
+## Rodada 25 — lista de alterações de texto/conteúdo (PDF do cliente)
+
+Aplicadas todas as alterações pedidas no PDF enviado:
+
+- **"Laboratório acreditado" → "Laboratório reconhecido"** e **"Acreditação ISO/IEC
+  17025" → "Reconhecimento ISO/IEC 17025"**, em todos os lugares do site onde isso
+  aparecia (topo, meta tags, dados estruturados, Diferenciais, Visão institucional) —
+  é uma distinção importante para auditoria (acreditação formal tem exigências
+  diferentes de reconhecimento), então troquei em todas as ocorrências, não só nos
+  pontos citados no PDF.
+- **"TECNOPUC" → "IFRS TecnoParque"**, em todos os lugares (topo, "Quem somos",
+  endereço do rodapé, dados estruturados para SEO).
+- **"Quem somos"**: parágrafo substituído pelo texto novo enviado; "Food service" →
+  "Serviços de alimentação"; removido "Farmácias"; adicionados "Hospitais" e
+  "Escolas" na lista de segmentos atendidos (texto). O carrossel de fotos ao lado
+  (`segments.json`) foi ajustado do mesmo jeito (removida a foto de farmácia, mantido
+  "Food service" renomeado), mas **não incluí fotos para Hospitais/Escolas no
+  carrossel** porque não temos essas imagens — só entram lá quando o cliente mandar.
+- **"ABNT NBR ISO IEC 17025:2005" → "ABNT NBR ISO IEC 17025"** (sem a data) no texto
+  da Missão institucional.
+- **Diferenciais**: "Orçamento no mesmo dia" → "Orçamento em até 24 horas"; "Laudo
+  com parecer técnico" → "Laudo com parecer técnico conforme solicitação" — e essa
+  mesma troca de "mesmo dia" → "em até 24 horas" foi replicada em todos os outros
+  lugares do site que usavam a mesma frase (topo, faixa de CTA, seção de orçamento,
+  FAQ).
+- **Serviços — Água**: texto de introdução trocado pelo pedido; removidas as
+  referências a normativas específicas (Portaria GM/MS 888, CONAMA 274 etc. — o
+  próprio cliente observou que essas leis mudam com frequência); removido o item
+  "Água de farmácia de manipulação"; removida a lista "Para quem" (indústria, food
+  service, farmácias etc.) que aparecia junto.
+- **Serviços — Alimentos**: lista de ensaios totalmente refeita com os itens pedidos
+  (Salmonella, Escherichia coli, Enterobactérias, Bolores e leveduras, Bacillus
+  cereus, Staphylococcus coagulase positiva, Clostridium perfringens, Listeria
+  monocytogenes, Coliformes totais, Bactérias gram negativas, Identificação de
+  Bolores e leveduras a nível de gênero), com os nomes científicos em itálico como
+  pedido (precisei ensinar o site a entender itálico nesse campo específico, que
+  antes só aceitava texto simples).
+- **Serviços — Controle de qualidade**: "Indicadores biológicos" → "Indicadores
+  biológicos e químicos"; adicionados "Eficiência de lavadoras de garrafões
+  retornáveis" e "Sanitizantes em geral".
+- **Documentos e certificações**: reordenado com "Reconhecimento..." primeiro;
+  adicionados REBLAS, CNES e Licenciamento Ambiental — como ainda não temos os PDFs
+  desses 3, eles aparecem no site com o aviso "em atualização", e viram baixáveis
+  automaticamente assim que alguém subir o PDF de cada um pelo admin (em
+  Documentos).
+- **FAQ**: respostas atualizadas conforme o PDF (coleta de amostra, prazo do laudo,
+  aceitação pela fiscalização, acesso aos laudos — trocado "portal Resultados
+  online" por "área do cliente", já que o cabeçalho não tem mais essa aba separada).
+- **Cabeçalho**: "Solicitar kit" → "Ficha de coleta".
+- **Rodapé — CTA "Pesquisa de satisfação"**: aumentado e com cor trocada para laranja
+  (mais contraste que o verde-azulado anterior), ícone de estrela, fundo com sombra —
+  bem mais chamativo, já que vocês reforçaram que é item cobrado em auditoria.
+- **Nova função no admin**: campo para **habilitar/desabilitar** as seções "Nossa
+  equipe" e "Clientes" direto pelo painel (Configurações gerais → duas opções Sim/Não).
+  Deixei as duas **desabilitadas agora**, como pedido — a seção some do site inteiro
+  (inclusive os links do menu e do rodapé que apontavam pra ela), sem precisar mexer
+  em código; quando tiver o conteúdo completo, é só entrar no admin e marcar "Sim,
+  exibir".
+
+**Pendências que não consegui resolver sozinho (preciso de informação sua):**
+- **Links do Instagram/Facebook no rodapé**: o Facebook configurado hoje
+  (`facebook.com/biocontrolrs`) é do nome antigo da marca ("Biocontrol") e pode estar
+  quebrado por isso; o Instagram nunca foi configurado (ainda está como pendência
+  desde o início do projeto). Preciso dos dois links reais e atualizados para
+  corrigir — não adivinho URL de rede social de vocês.
+- **Depoimento da Anelise** ("trocar Biocontrol por Bcontrol"): esse depoimento foi
+  cadastrado direto no admin do site (não existe no conteúdo padrão do repositório),
+  então essa troca de uma palavra é mais rápida de fazer direto por lá: Depoimentos
+  → encontrar o da Anelise → editar o texto → salvar.
+- **Nova pergunta de FAQ "Condições de pagamento"**: o PDF cita só "Para novos
+  clientes" e o texto parece cortado — não criei essa pergunta porque não quis
+  inventar uma condição comercial. Me manda o texto completo que eu adiciono.
+
+CSS em `?v=15`, JS em `?v=14`.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"

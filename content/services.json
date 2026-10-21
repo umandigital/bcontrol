@@ -3,17 +3,16 @@
     {
       "id": "agua",
       "title": "Água",
-      "intro": "Análises físico-químicas e microbiológicas para cada tipo de água — sempre pela norma que a legislação exige.",
+      "intro": "Análises físico-químicas e microbiológicas para cada tipo de água, conforme legislações e normativas vigentes.",
       "items": [
-        { "label": "Água potável", "norm": "Portaria GM/MS 888/2021" },
-        { "label": "Balneabilidade", "norm": "CONAMA 274" },
-        { "label": "Água de piscina", "norm": "NBR 10818" },
-        { "label": "Águas purificadas", "norm": "RDC 302" },
-        { "label": "Água de hemodiálise", "norm": "RDC 154" },
-        { "label": "Água de farmácia de manipulação", "norm": "RDC 67" },
-        { "label": "Água mineral", "norm": "RDC 274/275" }
+        { "label": "Água potável", "norm": "" },
+        { "label": "Balneabilidade", "norm": "" },
+        { "label": "Água de piscina", "norm": "" },
+        { "label": "Águas purificadas", "norm": "" },
+        { "label": "Água de hemodiálise", "norm": "" },
+        { "label": "Água mineral", "norm": "" }
       ],
-      "chips": ["Indústria", "Food service", "Condomínios", "Farmácias", "Hemodiálise", "Piscinas", "Água mineral", "Poços"],
+      "chips": [],
       "image": "assets/serv_agua",
       "imageAlt": "Análise de água"
     },
@@ -22,12 +21,17 @@
       "title": "Alimentos",
       "intro": "Pesquisa de patógenos e indicadores que atestam a segurança do seu produto, do ingrediente ao prato pronto.",
       "items": [
-        { "label": "Salmonella sp.", "norm": "RDC 331/2019" },
-        { "label": "Listeria monocytogenes", "norm": "RDC 331/2019" },
-        { "label": "Coliformes totais e termotolerantes", "norm": "IN 60/2019" },
-        { "label": "Staphylococcus coagulase positiva", "norm": "IN 60/2019" },
-        { "label": "Bacillus cereus · Clostridium", "norm": "IN 60/2019" },
-        { "label": "Bolores e leveduras · mesófilos", "norm": "Boas práticas" }
+        { "label": "<i>Salmonella</i>", "norm": "" },
+        { "label": "<i>Escherichia coli</i>", "norm": "" },
+        { "label": "Enterobactérias", "norm": "" },
+        { "label": "Bolores e leveduras", "norm": "" },
+        { "label": "<i>Bacillus cereus</i>", "norm": "" },
+        { "label": "<i>Staphylococcus</i> coagulase positiva", "norm": "" },
+        { "label": "<i>Clostridium perfringens</i>", "norm": "" },
+        { "label": "<i>Listeria monocytogenes</i>", "norm": "" },
+        { "label": "Coliformes totais", "norm": "" },
+        { "label": "Bactérias gram negativas", "norm": "" },
+        { "label": "Identificação de Bolores e leveduras a nível de gênero", "norm": "" }
       ],
       "chips": [],
       "image": "assets/serv_alimentos",
@@ -38,10 +42,12 @@
       "title": "Controle de qualidade",
       "intro": "O controle que garante que o seu processo está sob domínio — do equipamento ao ambiente.",
       "items": [
-        { "label": "Eficiência de esterilização em autoclave", "norm": "Indicadores biológicos" },
+        { "label": "Eficiência de esterilização em autoclave", "norm": "Indicadores biológicos e químicos" },
         { "label": "Swabs de superfícies e utensílios", "norm": "Higienização" },
         { "label": "Swabs de manipuladores", "norm": "Boas práticas" },
-        { "label": "Qualidade do ar em ambientes", "norm": "Monitoramento" }
+        { "label": "Qualidade do ar em ambientes", "norm": "Monitoramento" },
+        { "label": "Eficiência de lavadoras de garrafões retornáveis", "norm": "" },
+        { "label": "Sanitizantes em geral", "norm": "" }
       ],
       "chips": [],
       "image": "assets/serv_controle",

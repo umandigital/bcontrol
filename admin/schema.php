@@ -19,6 +19,14 @@ return [
       ['name' => 'cadastroUrl', 'label' => 'URL de atualização de cadastro', 'type' => 'string'],
       ['name' => 'ga4Id', 'label' => 'Google Analytics 4 (Measurement ID, ex. G-XXXXXXX)', 'type' => 'string'],
       ['name' => 'testCcEmail', 'label' => 'E-mail de teste (recebe os orçamentos no lugar do setor real) — deixe vazio para desativar', 'type' => 'string'],
+      ['name' => 'showTeam', 'label' => 'Exibir a seção "Nossa equipe" no site', 'type' => 'select', 'options' => [
+        ['value' => 'true', 'label' => 'Sim, exibir'],
+        ['value' => 'false', 'label' => 'Não, ocultar por enquanto'],
+      ]],
+      ['name' => 'showClients', 'label' => 'Exibir a seção "Clientes" no site', 'type' => 'select', 'options' => [
+        ['value' => 'true', 'label' => 'Sim, exibir'],
+        ['value' => 'false', 'label' => 'Não, ocultar por enquanto'],
+      ]],
       ['name' => 'sectorEmails', 'label' => 'E-mails por setor', 'type' => 'object', 'fields' => [
         ['name' => 'Águas', 'label' => 'Águas', 'type' => 'string'],
         ['name' => 'Alimentos', 'label' => 'Alimentos', 'type' => 'string'],

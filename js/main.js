@@ -13,6 +13,10 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  // escapa tudo normalmente, mas permite <i>/</i> (nomes científicos em itálico nos serviços)
+  function escapeHtmlAllowItalic(str) {
+    return escapeHtml(str).replace(/&lt;i&gt;/g, '<i>').replace(/&lt;\/i&gt;/g, '</i>');
+  }
   function picture(basePath, alt, cls, extraAttrs, fallbackExt) {
     extraAttrs = extraAttrs || '';
     fallbackExt = fallbackExt || 'png';
@@ -466,7 +470,8 @@
     wrap.innerHTML = services.map(function (s, i) {
       var open = i === 0;
       var items = s.items.map(function (it) {
-        return '<li><b>' + escapeHtml(it.label) + '</b> <span class="nm">' + escapeHtml(it.norm) + '</span></li>';
+        var norm = it.norm ? ' <span class="nm">' + escapeHtml(it.norm) + '</span>' : '';
+        return '<li><b>' + escapeHtmlAllowItalic(it.label) + '</b>' + norm + '</li>';
       }).join('');
       var chips = s.chips && s.chips.length ? '<div class="subt">Para quem</div><div class="chips">' + s.chips.map(function (c) { return '<span class="chip sec">' + escapeHtml(c) + '</span>'; }).join('') + '</div>' : '';
       return '<div class="item' + (open ? ' open' : '') + '">' +
@@ -506,6 +511,15 @@
     }).join('');
     observeReveal(wrap);
     wireToasts(wrap);
+  }
+
+  // liga/desliga uma dobra inteira do site (section + links de menu/rodapé que apontam pra ela)
+  function toggleSection(sectionId, show) {
+    var section = document.getElementById(sectionId);
+    if (section) section.hidden = !show;
+    document.querySelectorAll('[data-section-link="' + sectionId + '"]').forEach(function (a) {
+      a.hidden = !show;
+    });
   }
 
   function renderTeam(team) {
@@ -645,12 +659,16 @@
       fetchJSON('content/gallery.json')
     ]).then(function (results) {
       var cfg = results[0], services = results[1], faq = results[2], docs = results[3], team = results[4], clients = results[5], testis = results[6], segments = results[7], gallery = results[8];
+      var showTeam = cfg.showTeam !== 'false';
+      var showClients = cfg.showClients !== 'false';
+      toggleSection('equipe', showTeam);
+      toggleSection('clientes', showClients);
       renderStats(cfg.stats);
       renderServices(services.items);
       renderFaq(faq.items);
       renderDocuments(docs.items);
-      renderTeam(team.items);
-      renderClients(clients.items);
+      if (showTeam) renderTeam(team.items);
+      if (showClients) renderClients(clients.items);
       renderTestimonials(testis.items);
       renderQuemCarousel(segments.items);
       renderGallery(gallery.items);

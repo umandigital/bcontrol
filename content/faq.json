@@ -1,10 +1,10 @@
 {
   "items": [
-    { "q": "Como funciona? (do pedido ao laudo)", "a": "1) Orçamento — resposta no mesmo dia · 2) Coleta — kit PDF ou formulário online · 3) Análise — método acreditado · 4) Laudo no portal — com parecer técnico." },
-    { "q": "Como devo coletar e enviar a amostra?", "a": "Baixe o kit de coleta (PDF editável) ou use o formulário online, siga as orientações de recipiente, volume e transporte e envie junto com a amostra. Na dúvida, fale com a nossa equipe técnica." },
-    { "q": "Qual é o prazo do laudo?", "a": "Depende do tipo de ensaio e é informado no orçamento. Você acompanha e baixa o resultado pelo portal." },
-    { "q": "Os laudos são aceitos pela fiscalização?", "a": "Sim. Somos acreditados ISO/IEC 17025 e os laudos atendem às exigências de ANVISA, CONAMA e Ministério da Saúde." },
-    { "q": "Como acesso meus resultados?", "a": "Pelo portal “Resultados online”, no topo do site, com a sua chave e senha." },
+    { "q": "Como funciona? (do pedido ao laudo)", "a": "1) Orçamento — resposta em até 24 horas · 2) Coleta — ficha de coleta em PDF ou formulário online · 3) Análise — método reconhecido · 4) Laudo no portal — com parecer técnico." },
+    { "q": "Como devo coletar e enviar a amostra?", "a": "Solicite os procedimentos com as operações de coleta de acordo com o tipo de amostra que será encaminhado. Siga estas orientações respeitando o recipiente, volume e transporte e encaminhe junto com a ficha de coleta de amostras (PDF editável no cabeçalho do site). Qualquer dúvida, fale com a nossa equipe técnica antes do envio." },
+    { "q": "Qual o prazo para envio do laudo?", "a": "O prazo varia conforme o tipo de ensaio solicitado, mas é possível consultar logo abaixo de cada item do seu orçamento em quantos dias corridos o laudo será encaminhado." },
+    { "q": "Os laudos são aceitos pela fiscalização?", "a": "Sim, somos reconhecidos pela Rede Metrológica conforme a ISO/IEC 17025 e atendemos diversos órgãos fiscalizatórios em todo o estado." },
+    { "q": "Como acesso meus laudos?", "a": "Os laudos ficam disponíveis na área do cliente, sendo acessados exclusivamente através do login e senha recebidos no momento do cadastro, e ficam disponíveis pelo período de 6 meses." },
     { "q": "Atendem fora de Viamão/POA?", "a": "Sim, atendemos todo o Rio Grande do Sul, com logística de coleta e recebimento." }
   ]
 }
