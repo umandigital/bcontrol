@@ -792,7 +792,30 @@ Aplicadas todas as alterações pedidas no PDF enviado:
   clientes" e o texto parece cortado — não criei essa pergunta porque não quis
   inventar uma condição comercial. Me manda o texto completo que eu adiciono.
 
-CSS em `?v=15`, JS em `?v=14`.
+**Atualização importante antes de montar o zip desta rodada**: como essa rodada mexe
+em `content/*.json` (coisa que normalmente evito, pela lição da Rodada 20), comparei
+cada arquivo direto com o que está hoje no site de teste antes de sobrescrever
+qualquer coisa — `documents.json`, `segments.json` e `services.json` estavam
+idênticos ao conteúdo original (podem ser sobrescritos sem perda). Mas
+`content/faq.json` e `content/site.json` **já tinham sido editados ao vivo** pelo
+admin, com informação real que eu não tinha:
+- Havia uma pergunta de FAQ "Quais são as condições de pagamento?" com a resposta
+  completa (prazos de boleto, Pix, Sebrae/Sebratec) — isso resolve exatamente o item
+  que eu tinha deixado pendente no PDF (achei que o texto estivesse cortado, mas na
+  verdade já tinha sido preenchido direto no site). Importei essa pergunta para o
+  arquivo novo, mantendo o conteúdo, só com uma revisão leve de pontuação/capitalização
+  (sem mexer em nenhum prazo ou valor), e adicionei `white-space:pre-line` no CSS do
+  FAQ pra essa resposta, que tem várias linhas, exibir com quebra de parágrafo em vez
+  de um bloco só de texto corrido.
+- O Instagram **já tinha um link real cadastrado** (`instagram.com/bcontrolrs`), ao
+  contrário do que eu tinha no repositório (ainda com o placeholder "TODO"). Importei
+  esse link real — então o problema do Instagram "não funcionar" relatado no PDF já
+  deve estar resolvido (o link só não tinha chegado ainda nos arquivos que eu estava
+  usando como base).
+- O Facebook continua `facebook.com/biocontrolrs` nos dois lugares (sem mudança) —
+  segue como pendência eu precisar do link certo, se esse realmente estiver errado.
+
+CSS em `?v=16`, JS em `?v=14`.
 
 ## Checklist final antes de publicar em produção
 
