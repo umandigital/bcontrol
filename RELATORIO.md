@@ -825,6 +825,24 @@ realmente editei (`site.json`, `faq.json`, `documents.json`, `segments.json`,
 
 CSS em `?v=16`, JS em `?v=14`.
 
+## Rodada 26 — bug crítico: login do admin quebrado em subpasta (correção minha)
+
+Reportado "Sessão expirada, tente novamente" ao tentar logar no `/admin`, mesmo com
+e-mail/senha corretos. Causa: na Rodada 19 (reforço de segurança), fixei o cookie de
+sessão do painel no caminho `/admin` — funciona perfeitamente quando o site está na
+raiz do domínio, mas o ambiente de teste roda numa subpasta
+(`umandigital.com.br/bcontrol_sitev2/admin/`). Um cookie fixo em `/admin` nunca é
+enviado de volta pelo navegador para uma URL em `/bcontrol_sitev2/admin/`, então a
+sessão nunca "grudava" — todo login parecia expirado antes mesmo de verificar a
+senha. Esse bug só apareceu agora porque essa é a primeira vez que o código da
+Rodada 19 chegou de fato no ambiente de teste (as rodadas entre uma e outra eram só
+de conteúdo/mobile, sem reenviar os arquivos do admin).
+
+**Corrigido**: o caminho do cookie agora é calculado a partir da própria URL da pasta
+`admin/` (`dirname($_SERVER['SCRIPT_NAME'])`), funcionando tanto na raiz do domínio
+quanto em qualquer subpasta, sem precisar fixar nada. Testado nos dois cenários
+(raiz e subpasta simulada) antes de subir — login funcionando nos dois.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"

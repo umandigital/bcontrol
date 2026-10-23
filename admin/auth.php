@@ -15,9 +15,16 @@ $admin_is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
   || (($_SERVER['SERVER_PORT'] ?? '') === '443')
   || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
 
+// Caminho real da pasta admin/ na URL — calculado, não fixo em "/admin", porque o
+// site pode estar hospedado numa subpasta (ex.: /bcontrol_sitev2/admin/), e nesse
+// caso um cookie fixo em "/admin" nunca seria enviado de volta pelo navegador,
+// fazendo o login parecer "sessão expirada" a cada tentativa.
+$admin_cookie_path = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/admin')), '/');
+if ($admin_cookie_path === '') $admin_cookie_path = '/';
+
 session_set_cookie_params([
   'lifetime' => 0,
-  'path' => '/admin',
+  'path' => $admin_cookie_path,
   'domain' => '',
   'secure' => $admin_is_https,
   'httponly' => true,
