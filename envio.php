@@ -31,8 +31,35 @@ function clean_line(string $s): string {
   return trim(preg_replace('/[\r\n]+/', ' ', $s));
 }
 
+/** Limite simples de envios por IP, pra um script não conseguir disparar e-mails em
+ *  massa por esse formulário (nem vira "spam bomb" pro mail() do servidor nem lota a
+ *  caixa de quem recebe os orçamentos). Guardado em arquivo, igual ao bloqueio de
+ *  login do /admin. */
+function envio_rate_limit_check(): bool {
+  $file = __DIR__ . '/content/.backups/envio_rate.json';
+  $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+  $data = [];
+  $raw = @file_get_contents($file);
+  if ($raw) { $decoded = json_decode($raw, true); if (is_array($decoded)) $data = $decoded; }
+  $entry = $data[$ip] ?? ['count' => 0, 'since' => time()];
+  if (time() - $entry['since'] > 600) { $entry = ['count' => 0, 'since' => time()]; }
+  $entry['count']++;
+  $data[$ip] = $entry;
+  foreach ($data as $k => $v) { if (time() - ($v['since'] ?? 0) > 3600) unset($data[$k]); }
+  $fh = @fopen($file, 'c+');
+  if ($fh) {
+    if (flock($fh, LOCK_EX)) { ftruncate($fh, 0); fwrite($fh, json_encode($data)); fflush($fh); flock($fh, LOCK_UN); }
+    fclose($fh);
+  }
+  return $entry['count'] <= 8; // até 8 envios por IP a cada 10 minutos
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   respond(405, ['ok' => false, 'error' => 'Método não permitido.']);
+}
+
+if (!envio_rate_limit_check()) {
+  respond(429, ['ok' => false, 'error' => 'Muitos envios em pouco tempo. Aguarde alguns minutos e tente novamente.']);
 }
 
 // Honeypot anti-spam: campo escondido que só um robô preenche.
@@ -41,11 +68,11 @@ if (!empty($_POST['empresa_site'])) {
   respond(200, ['ok' => true]);
 }
 
-$nome = clean_line((string)($_POST['nome'] ?? ''));
-$email = clean_line((string)($_POST['email'] ?? ''));
-$telefone = clean_line((string)($_POST['telefone'] ?? ''));
-$setor = clean_line((string)($_POST['setor'] ?? ''));
-$mensagem = trim((string)($_POST['mensagem'] ?? ''));
+$nome = mb_substr(clean_line((string)($_POST['nome'] ?? '')), 0, 150);
+$email = mb_substr(clean_line((string)($_POST['email'] ?? '')), 0, 150);
+$telefone = mb_substr(clean_line((string)($_POST['telefone'] ?? '')), 0, 40);
+$setor = mb_substr(clean_line((string)($_POST['setor'] ?? '')), 0, 60);
+$mensagem = mb_substr(trim((string)($_POST['mensagem'] ?? '')), 0, 4000);
 
 if ($nome === '' || $setor === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
   respond(422, ['ok' => false, 'error' => 'Preencha nome, e-mail válido e setor.']);

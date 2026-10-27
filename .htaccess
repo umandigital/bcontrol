@@ -31,6 +31,7 @@ Options -Indexes
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
 </IfModule>
 
 # Bloqueia acesso direto via navegador aos arquivos com os hashes de senha do painel,
@@ -42,8 +43,19 @@ Options -Indexes
 <FilesMatch "^\.(git|env|htaccess|htpasswd)">
   Require all denied
 </FilesMatch>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # Força HTTPS (todo o site já assume https://www.bcontrol.com.br nas meta tags,
+  # canonical e dados estruturados). SÓ ATIVAR depois que o SSL do domínio já
+  # estiver funcionando — se publicar isso antes do certificado estar ativo, o site
+  # fica inacessível (redireciona pra um https que ainda não existe). Se precisar
+  # publicar antes do SSL estar pronto, comente as 3 linhas abaixo temporariamente.
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
   RewriteRule ^content/\.backups/ - [F,L]
   RewriteRule ^\.git/ - [F,L]
 </IfModule>

@@ -141,7 +141,7 @@ return [
     'itemType' => 'object',
     'itemLabelField' => 'title',
     'fields' => [
-      ['name' => 'title', 'label' => 'Título (uso interno — não aparece na tela, só ajuda a identificar o item aqui no painel)', 'type' => 'string'],
+      ['name' => 'title', 'label' => 'Título/descrição da foto (não aparece escrito na tela, mas é usado como texto alternativo da imagem — importante para acessibilidade e para o Google entender o que é a foto)', 'type' => 'string'],
       ['name' => 'type', 'label' => 'Tipo', 'type' => 'select', 'options' => [
         ['value' => 'image', 'label' => 'Imagem'],
         ['value' => 'video', 'label' => 'Vídeo do YouTube'],

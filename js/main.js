@@ -497,6 +497,33 @@
     }).join('');
     accordion('accFaq');
     openDefaultAccordionItems();
+    injectFaqSchema(faq);
+  }
+
+  // Dados estruturados FAQPage gerados a partir do mesmo content/faq.json exibido na
+  // tela — nunca ficam desatualizados em relação ao que o visitante realmente vê,
+  // mesmo que o FAQ seja editado depois pelo admin (ao contrário de um JSON-LD fixo
+  // escrito direto no HTML).
+  function injectFaqSchema(faq) {
+    var old = document.getElementById('faqSchema');
+    if (old) old.remove();
+    if (!faq || !faq.length) return;
+    var schema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faq.map(function (f) {
+        return {
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a }
+        };
+      })
+    };
+    var script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'faqSchema';
+    script.textContent = JSON.stringify(schema);
+    document.head.appendChild(script);
   }
 
   function renderDocuments(docs) {

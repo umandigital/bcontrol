@@ -871,6 +871,63 @@ Nicolini) e a foto do segmento "Farmácias", que não são mais usados por nenhu
 conteúdo — conferido com uma varredura automática que não falta nem sobra nenhum
 arquivo referenciado.
 
+## Rodada 28 — auditoria final de SEO/GEO e segurança
+
+Revisão completa do que já estava feito e o que ainda faltava, antes da publicação
+definitiva. Achados 6 pontos reais, todos corrigidos:
+
+**SEO/GEO:**
+- **Faltava o schema `FAQPage`** (dados estruturados que ajudam o Google a mostrar as
+  perguntas direto no resultado de busca, e que motores de IA tipo ChatGPT/Perplexity
+  também leem para responder sobre a empresa). Implementado de um jeito que **nunca
+  fica desatualizado**: em vez de escrever o JSON-LD fixo no HTML (que ficaria
+  defasado assim que alguém editasse o FAQ pelo admin), o site monta esse schema
+  dinamicamente a partir do mesmo `content/faq.json` que já aparece na tela — sempre
+  em sincronia com o que o visitante realmente vê.
+- **`sitemap.xml` com datas de `lastmod` desatualizadas** (ainda em 13/10, com o site
+  tendo mudado bastante desde então) — atualizado.
+- **Campo "Título" da galeria tinha uma descrição errada no admin** ("uso interno, não
+  aparece na tela") — na verdade esse texto vira o `alt` da imagem (acessibilidade e
+  SEO de imagem). Corrigida a explicação no painel. As 13 fotos já cadastradas estão
+  com esse campo vazio — vale a pena preencher uma frase curta descrevendo cada foto
+  quando der (ex.: "Bancada de análises microbiológicas"), mas isso é conteúdo, não
+  dá pra eu inventar uma descrição real da própria estrutura do cliente.
+
+**Segurança:**
+- **Sem HTTPS forçado.** O site inteiro já assume `https://www.bcontrol.com.br` (meta
+  tags, canonical, dados estruturados), mas nada no servidor obrigava essa troca —
+  um visitante que entrasse por `http://` ficava na versão insegura. Adicionado
+  redirecionamento automático para HTTPS + cabeçalho HSTS. **Atenção**: isso só pode
+  ir ao ar depois que o certificado SSL do domínio já estiver ativo — publicar antes
+  disso deixa o site inacessível (está documentado com um comentário bem visível
+  dentro do próprio `.htaccess`).
+- **Formulário de orçamento sem limite de envios.** Tinha proteção contra bot simples
+  (honeypot), mas nada impedia um script mandar centenas de pedidos em sequência,
+  lotando a caixa de entrada do setor ou sobrecarregando o `mail()` do servidor.
+  Adicionado um limite de 8 envios por IP a cada 10 minutos (mesmo padrão do bloqueio
+  de login do admin), e um teto de tamanho nos campos do formulário.
+- Pequeno reforço: o formulário de "Acessar resultados" (área do cliente), que abre
+  em nova aba, ganhou `rel="noopener"` — mesma proteção que os outros links do site já
+  tinham, só esse formulário tinha ficado de fora.
+
+**Já verificado e correto, sem necessidade de mexer:**
+- Hierarquia de headings, canonical, Open Graph/Twitter, JSON-LD `LocalBusiness`,
+  `robots.txt`, alt text em praticamente todas as imagens (fotos de equipe, logos de
+  clientes, serviços — todas usam nome/legenda real, não texto vazio), links internos
+  batendo com os `id` existentes.
+- Autenticação do admin (bcrypt, CSRF, sessão com cookie seguro e caminho dinâmico,
+  bloqueio de força bruta por IP, timing-safe), upload de imagem validado pelos bytes
+  reais do arquivo, `.htaccess` bloqueando `users.json`/`login_attempts.json`/
+  `.git`/`.env`/listagem de diretório, cabeçalhos `X-Content-Type-Options`/
+  `X-Frame-Options`/`Referrer-Policy`.
+
+**Decisão consciente de não fazer agora**: Content-Security-Policy (CSP) completo —
+exigiria testar com cuidado contra GA4, YouTube, Google Fonts e os ícones do
+WhatsApp/Instagram pra não quebrar nada sem querer; fica como melhoria futura, não
+como pendência crítica.
+
+CSS continua em `?v=16` (não mudou nesta rodada); JS em `?v=15`.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
