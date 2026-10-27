@@ -1,9 +1,16 @@
 {
-  "items": [
-    { "name": "Marquespan", "logo": "assets/logo_marquespan" },
-    { "name": "Zaffari", "logo": "assets/logo_zaffari" },
-    { "name": "Rissul", "logo": "assets/logo_rissul" },
-    { "name": "Jimo", "logo": "assets/logo_jimo" },
-    { "name": "Nicolini", "logo": "assets/logo_nicolini" }
-  ]
+    "items": [
+        {
+            "name": "Jimo",
+            "logo": "assets/jimo-979d3ad2"
+        },
+        {
+            "name": "Nicolini",
+            "logo": "assets/nicolini-81a4689a"
+        },
+        {
+            "name": "Guimarães Alimentos",
+            "logo": "assets/novo-logo-guimaraes-2022-2--1-181c571b"
+        }
+    ]
 }

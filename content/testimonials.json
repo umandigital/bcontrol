@@ -1,7 +1,19 @@
 {
-  "items": [
-    { "quote": "[Depoimento a confirmar com o cliente]", "name": "[Nome a confirmar]", "company": "[Empresa a confirmar]" },
-    { "quote": "[Depoimento a confirmar com o cliente]", "name": "[Nome a confirmar]", "company": "[Empresa a confirmar]" },
-    { "quote": "[Depoimento a confirmar com o cliente]", "name": "[Nome a confirmar]", "company": "[Empresa a confirmar]" }
-  ]
+    "items": [
+        {
+            "quote": "Temos uma ótima experiência com a Bcontrol. A equipe é sempre muito atenciosa e prestativa, os resultados são confiáveis e os prazos são cumpridos. Utilizamos o laboratório para nossas análises microbiológicas e físico-químicas e estamos muito satisfeitos com o atendimento e a parceria.",
+            "name": "Lívia Schmatz - Coordenadora de Qualidade",
+            "company": "Guimarães Brasil  Ind. e Alimentos Ltda."
+        },
+        {
+            "quote": "A Bcontrol é nossa parceria há mais de 5 anos, a eles confiamos toda a logística e análises microbiológicas necessárias para garantir a correta validação de nossos sistemas de água, métodos de limpeza e sanitização e avaliação de produtos acabados. Seu corpo técnico é extremamente qualificado e prontamente disponível para esclarecimento de dúvidas e alinhamento de metodologias (inclusive metodologias personalizadas). Durante todos estes anos sempre fomos muito bem atendidos pelo Max, Vanessa, Fabíola, Daniela e sua equipe.",
+            "name": "Rafael Milano Borges - Coordenador de SGI",
+            "company": "Jimo"
+        },
+        {
+            "quote": "Trabalhamos com o Bcontrol desde 2022 e somos muito satisfeitos, com os serviços prestados, desde o recebimento de produtos ( flexibilidade com as entregas de amostras) ,os valores justos, os prazos , a credibilidade nos resultados, enfim, todos serviços prestados com muita excelência.",
+            "name": "Anelise Burns Flores - Coordenadora de Segurança Alimentar",
+            "company": "Grupo Nicolini"
+        }
+    ]
 }

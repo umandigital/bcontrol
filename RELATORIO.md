@@ -843,6 +843,34 @@ de conteúdo/mobile, sem reenviar os arquivos do admin).
 quanto em qualquer subpasta, sem precisar fixar nada. Testado nos dois cenários
 (raiz e subpasta simulada) antes de subir — login funcionando nos dois.
 
+## Rodada 27 — sincroniza conteúdo real do ambiente de teste para o pacote final
+
+Antes de montar o zip completo para a pessoa que vai publicar em produção, comparei
+de novo todos os `content/*.json` com o que está hoje no ambiente de teste — dessa
+vez também `clients.json`, `testimonials.json` e `gallery.json` (que nas rodadas
+anteriores eu tinha propositalmente deixado de lado, por não serem o foco daquelas
+rodadas). Três deles já tinham conteúdo real inserido ao vivo que não existia no
+repositório:
+
+- **Depoimentos**: 3 depoimentos reais (Guimarães, Jimo, Grupo Nicolini) — inclusive
+  já com "Bcontrol" escrito certo no da Anelise, então aquele ajuste pendente já
+  tinha sido feito direto no admin.
+- **Clientes**: 3 logos novas (Jimo, Nicolini, Guimarães Alimentos), já com fundo
+  transparente — confirma que o upload de logo com remoção automática de fundo
+  (Rodada 21) está funcionando na prática.
+- **Galeria institucional**: 13 fotos reais da estrutura/laboratório.
+- **Documentos**: a Licença Ambiental já foi enviada (arquivo real), e o CNES tem o
+  número preenchido no título (ainda sem o PDF — some "em atualização" até alguém
+  subir o arquivo pelo admin).
+
+Baixei as imagens e o PDF que essas entradas referenciam (que só existiam no
+servidor de teste, nunca passaram pelo git) e trouxe tudo pro repositório, pra não ir
+nenhuma referência quebrada no pacote final. Também removi do repositório os
+arquivos de logo antigos (Marquespan, Zaffari, Rissul e as versões antigas de Jimo/
+Nicolini) e a foto do segmento "Farmácias", que não são mais usados por nenhum
+conteúdo — conferido com uma varredura automática que não falta nem sobra nenhum
+arquivo referenciado.
+
 ## Checklist final antes de publicar em produção
 
 - [ ] Criar uma conta própria para cada pessoa que for mexer no painel `/admin` → "Usuários"
